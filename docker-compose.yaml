@@ -1,0 +1,45 @@
+version: "3.5"
+services:
+  orion:
+    image: fiware/orion
+    hostname: orion
+    container_name: fiware-orion
+    depends_on:
+      - mongo-db
+    ports:
+      - "1026:1026"
+    command: -dbhost mongo-db -logLevel DEBUG -noCache
+  # Databases - Orion uses Mongo-DB, Cygnus is persisting to Postgres
+  mongo-db:
+    image: mongo:3.6
+    hostname: mongo-db
+    container_name: db-mongo
+    ports:
+      - "27017:27017"
+    command: --bind_ip_all --smallfiles
+    volumes:
+      - mongo-db:/data
+
+  adminmongo:
+    image: mrvautin/adminmongo
+    ports:
+      - ${ADMIN_MONGO_PORT:-1234}:1234
+    environment:
+      - HOST=0.0.0.0
+  #mongodb://@mongo-db      <esto es para conectar
+  grafana:
+    image: grafana/grafana-oss
+    ports:
+      - 3000:3000
+    environment:
+      #crate-datasource,Postgres
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-worldmap-panel,grafana-clock-panel,grafana-worldmap-panel
+    volumes:
+      - grafana-storage:/var/lib/grafana #admin - ORT2022!
+volumes:
+  mongo-db: ~
+  # postgres-db: ~
+  pgadmin-db: ~
+  grafana-storage: ~
+  # cratedata: ~
+  #portainer: ~
