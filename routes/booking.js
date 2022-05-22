@@ -50,43 +50,40 @@ router.get("/hoteles", async function (req, res, next) {
   // map de mi array de ids
   let destVARIABLE;
 
-  await arrayIds.map((idHotel) => {
-    //  dame tal cosa por idHotel
-    destVARIABLE = idHotel;
-
+  async function recorrerId(idH) {
+    let statsHotel;
     const options2 = {
       method: "GET",
-      url: "https://booking-com.p.rapidapi.com/v1/hotels/search",
-      params: {
-        checkout_date: "2022-10-01",
-        units: "metric",
-        dest_id: destVARIABLE,
-        dest_type: "city",
-        locale: "en-gb",
-        adults_number: "1",
-        order_by: "popularity",
-        filter_by_currency: "AED",
-        checkin_date: "2022-09-30",
-        room_number: "1",
-      },
+      url: "https://booking-com.p.rapidapi.com/v1/hotels/review-scores",
+      params: { locale: "en-gb", hotel_id: idH },
       headers: {
         "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
         "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
       },
     };
 
-    axios
+    await axios
       .request(options2)
       .then(function (response2) {
-        console.log(response2.data);
-        respuesta2.push(response2.data);
+        statsHotel = response2.data;
+        console.log(response2.data.score_breakdown[0].average_score);
       })
       .catch(function (error2) {
         console.error(error2);
       });
+
+    return statsHotel;
+  }
+
+  await arrayIds.map((idHotel) => {
+    //  dame tal cosa por idHotel
+
+    statsHotel = recorrerId(idHotel);
+
+    respuesta2.push(statsHotel);
   });
 
-  await console.log("la respuesta es: " + respuesta2);
+  //  console.log("la respuesta es: " + respuesta2);
   //////////////////////////////////////
   res.json(respuesta2);
 });
