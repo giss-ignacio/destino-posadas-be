@@ -1,3 +1,5 @@
+const { json } = require("express/lib/response");
+
 miObjeto = {
   data: [
     {
@@ -2826,21 +2828,17 @@ miObjeto2 = {
 
 let arrayDeObjetos = miObjeto.data;
 
-let hoteles = arrayDeObjetos.map((hotel) => {
-  return hotel.location_id;
+let hotelesIds = arrayDeObjetos.map((hotelId) => {
+  return hotelId.location_id;
 });
-
-let hotelObj = arrayDeObjetos.map((hotelObj) => {
-  return hotelObj.data;
-});
-
-console.log(hoteles);
 
 //Mi test2
 
-let arrayAverageScores = [];
-let arrayAMapear = miObjeto2.score_breakdown;
-let tamanioArr = arrayAMapear.length;
+const extraerPuntaje = function (hotel) {
+  return hotel.score_breakdown.map((resenia) => {
+    return resenia.average_score;
+  });
+};
 
 //funcion para calcular el promedio********************
 let calcularPromedioResenias = function (puntajes) {
@@ -2855,19 +2853,24 @@ let calcularPromedioResenias = function (puntajes) {
 };
 //***************************************************** */
 
-//mapeo las 10 reseñas
-let arrFinal = arrayAMapear.map((resenia) => {
-  return resenia.average_score;
-});
+//busco Hotel por ID
+const buscarHotel = (id) => {
+  return miObjeto2;
+};
 
-let puntajesFinales = hoteles.map((hotelId) => {
-  return calcularPromedioResenias(hotelId);
+let puntajesFinales = hotelesIds.map((hotelId) => {
+  let hotelPosta = buscarHotel(hotelId);
+
+  return {
+    hotelId: hotelId,
+    promedio: calcularPromedioResenias(extraerPuntaje(hotelPosta)),
+  };
 });
 
 // console.log(
 //   "Promedio total de todos los hoteles en todas las reseñas: " +
 //     calcularPromedioResenias
 // );
-// console.log("mi promedio es : " + calcularPromedio(arrFinal));
+console.log(puntajesFinales);
 
 //armar un array de hoteles con todos los promedios.
