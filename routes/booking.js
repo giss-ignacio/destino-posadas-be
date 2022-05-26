@@ -2,90 +2,78 @@ const axios = require("axios");
 var express = require("express");
 const router = express.Router();
 
-//GET ID HOTELES
-router.get("/hoteles", async function (req, res, next) {
-  let respuesta;
-  let respuesta2 = [];
-  //endpoint de lista de hoteles
+//GET HOTELES
+let arrHotelesConInfo = [];
+
+router.get("/hoteles", function (req, res, next) {
+  let arrayIdsMock = [];
+  //"8051135", "5931564"
+
+  // endpoint de lista de hoteles
   const options = {
     method: "GET",
-    url: "https://travel-advisor.p.rapidapi.com/hotels/list",
+    url: "https://booking-com.p.rapidapi.com/v1/hotels/search",
     params: {
-      location_id: "312805",
-      adults: "1",
-      rooms: "1",
-      nights: "2",
-      offset: "0",
-      limit: "30",
-      sort: "recommended",
-      lang: "en_US",
+      checkout_date: "2022-10-01",
+      units: "metric",
+      dest_id: "-1008461",
+      dest_type: "city",
+      locale: "en-gb",
+      adults_number: "1",
+      order_by: "popularity",
+      filter_by_currency: "ARS",
+      checkin_date: "2022-09-30",
+      room_number: "1",
+      page_number: "0",
     },
     headers: {
-      "X-RapidAPI-Host": "travel-advisor.p.rapidapi.com",
+      "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
       "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
     },
   };
 
-  await axios
+  axios
     .request(options)
     .then(function (response) {
-      respuesta = response.data;
+      listaDeHoteles = response.data;
     })
     .catch(function (error) {
       console.error(error);
     });
+  ////////////////////////////////////
+  ////// GET IDS HOTELES /////////////
+  ////////////////////////////////////
 
-  //Mi test
-  //respuesta.data es el array de hoteles q tiene el objeto respuesta
+  let listaDeHotelesResult = listaDeHoteles.result;
 
-  let arrayDeObjetos = respuesta.data;
-  let arrayIds = [];
-
-  await arrayDeObjetos.map((hotel) => {
-    arrayIds.push(hotel.location_id);
+  listaDeHotelesResult.forEach((element) => {
+    arrayIdsMock.push(element.hotel_id);
   });
 
-  await console.log(arrayIds);
+  // QUERY2
 
-  // map de mi array de ids
-  let destVARIABLE;
-
-  async function recorrerId(idH) {
-    let statsHotel;
-    const options2 = {
+  arrayIdsMock.forEach((id) => {
+    const options = {
       method: "GET",
       url: "https://booking-com.p.rapidapi.com/v1/hotels/review-scores",
-      params: { locale: "en-gb", hotel_id: idH },
+      params: { locale: "en-gb", hotel_id: id },
       headers: {
         "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
         "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
       },
     };
 
-    await axios
-      .request(options2)
-      .then(function (response2) {
-        statsHotel = response2.data;
-        console.log(response2.data.score_breakdown[0].average_score);
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data);
+        arrHotelesConInfo.push(response.data);
       })
-      .catch(function (error2) {
-        console.error(error2);
+      .catch(function (error) {
+        console.error(error);
       });
-
-    return statsHotel;
-  }
-
-  await arrayIds.map((idHotel) => {
-    //  dame tal cosa por idHotel
-
-    statsHotel = recorrerId(idHotel);
-
-    respuesta2.push(statsHotel);
   });
-
-  //  console.log("la respuesta es: " + respuesta2);
-  //////////////////////////////////////
-  res.json(respuesta2);
+  res.json(arrHotelesConInfo);
 });
 
 module.exports = router;
