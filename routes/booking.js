@@ -3,12 +3,9 @@ var express = require("express");
 const router = express.Router();
 
 //GET HOTELES
-let arrHotelesConInfo = [];
 
-router.get("/hoteles", async function (req, res, next) {
-  let arrayIdsMock = [];
-  //"8051135", "5931564"
 
+async function consultaDeHoteles() {
   // endpoint de lista de hoteles
   const options = {
     method: "GET",
@@ -32,48 +29,61 @@ router.get("/hoteles", async function (req, res, next) {
     },
   };
 
+  let listaDeHoteles = [];
+
   await axios
     .request(options)
     .then(function (response) {
-      listaDeHoteles = response.data;
-      console.log(listaDeHoteles);
+      
+      listaDeHoteles.push(response.data);
     })
     .catch(function (error) {
       console.error(error);
     });
+
   ////////////////////////////////////
   ////// GET IDS HOTELES /////////////
   ////////////////////////////////////
 
-  let listaDeHotelesResult = listaDeHoteles.result;
+  return listaDeHoteles.map((e) => {
+    return e.hotel_id;
+  })
+}
 
-  listaDeHotelesResult.forEach((element) => {
-    arrayIdsMock.push(element.hotel_id);
+async function consultaDePuntajes(hotelesIds) {
+  let arrHotelesConInfo = [];
+    // QUERY2
+    hotelesIds.forEach((id) => {
+    const options = {
+      method: "GET",
+      url: "https://booking-com.p.rapidapi.com/v1/hotels/review-scores",
+      params: { locale: "en-gb", hotel_id: id },
+      headers: {
+        "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
+        "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
+      },
+    };
+
+    axios
+      .request(options)
+      .then(function (response) {
+        // console.log(response.data);
+        arrHotelesConInfo.push(response.data);
+      })
+      .catch(function (error) {
+        console.error(error);
+      });
   });
 
-  // QUERY2
+  return arrHotelesConInfo;
+}
 
-  // arrayIdsMock.forEach((id) => {
-  //   const options = {
-  //     method: "GET",
-  //     url: "https://booking-com.p.rapidapi.com/v1/hotels/review-scores",
-  //     params: { locale: "en-gb", hotel_id: id },
-  //     headers: {
-  //       "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-  //       "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
-  //     },
-  //   };
+router.get("/hoteles", async function (req, res, next) {
+ 
 
-  //   axios
-  //     .request(options)
-  //     .then(function (response) {
-  //       // console.log(response.data);
-  //       arrHotelesConInfo.push(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       console.error(error);
-  //     });
-  // });
+  let hotelesIds = await consultaDeHoteles();
+  console.log(hotelesIds);
+  let arrHotelesConInfo = await consultaDePuntajes(hotelesIds);
   res.json(arrHotelesConInfo);
 });
 
