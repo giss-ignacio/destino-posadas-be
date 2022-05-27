@@ -25,7 +25,7 @@ async function consultaDeHoteles() {
     },
     headers: {
       "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-      "X-RapidAPI-Key": "d1c9714594msh22b6c163e2c4be6p129e59jsnc056ede1f158",
+      "X-RapidAPI-Key": "poner rapid api key",
     },
   };
 
@@ -64,7 +64,7 @@ async function consultaUnHotel(id) {
           timeout: 8000,
           headers: {
               'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
-              'X-RapidAPI-Key': 'd1c9714594msh22b6c163e2c4be6p129e59jsnc056ede1f158'
+              'X-RapidAPI-Key': 'poner rapid api key'
           }
       })
       if(res.status == 200){
@@ -104,7 +104,8 @@ router.get("/hoteles", async function (req, res, next) {
     res.json(values);
   });
 
-
+  // Mandarlo a la base da datos por Orion
+  // hacer el set timeout para que no de API Limit exceeded
 
 });
 

@@ -8,7 +8,7 @@ arrayIdsMock.forEach((id) => {
     params: { locale: "en-gb", hotel_id: id },
     headers: {
       "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-      "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
+      "X-RapidAPI-Key": "poner rapid api key",
     },
   };
 
