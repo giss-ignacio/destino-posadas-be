@@ -25,7 +25,7 @@ async function consultaDeHoteles() {
     },
     headers: {
       "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-      "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
+      "X-RapidAPI-Key": "d1c9714594msh22b6c163e2c4be6p129e59jsnc056ede1f158",
     },
   };
 
@@ -45,46 +45,67 @@ async function consultaDeHoteles() {
   ////// GET IDS HOTELES /////////////
   ////////////////////////////////////
 
-  return listaDeHoteles.map((e) => {
+
+  return listaDeHoteles[0].result.map((e) => {
     return e.hotel_id;
   })
 }
 
-async function consultaDePuntajes(hotelesIds) {
-  let arrHotelesConInfo = [];
-    // QUERY2
-    hotelesIds.forEach((id) => {
-    const options = {
-      method: "GET",
-      url: "https://booking-com.p.rapidapi.com/v1/hotels/review-scores",
-      params: { locale: "en-gb", hotel_id: id },
-      headers: {
-        "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-        "X-RapidAPI-Key": "9d38a8bc8cmsh161083924f024ffp19b2bajsn5cb83b18933b",
-      },
-    };
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-    axios
-      .request(options)
-      .then(function (response) {
-        // console.log(response.data);
-        arrHotelesConInfo.push(response.data);
+async function consultaUnHotel(id) {
+  try {
+     let res = await axios({
+          url: 'https://booking-com.p.rapidapi.com/v1/hotels/review-scores',
+          method: 'get',
+          params: { locale: "en-gb", hotel_id: id },
+          timeout: 8000,
+          headers: {
+              'X-RapidAPI-Host': 'booking-com.p.rapidapi.com',
+              'X-RapidAPI-Key': 'd1c9714594msh22b6c163e2c4be6p129e59jsnc056ede1f158'
+          }
       })
-      .catch(function (error) {
-        console.error(error);
-      });
+      if(res.status == 200){
+          // test for status you want, etc
+          console.log(res.status)
+      }    
+      // Don't forget to return something   
+      return res.data
+  }
+  catch (err) {
+      console.error(err);
+  }
+}
+
+
+async function consultaDePuntajes(hotelesIds) {
+  let puntajesDeHoteles = [];
+    // QUERY2
+    hotelesIds.forEach((id) => {      
+      puntajesDeHoteles.push(consultaUnHotel(id).then(res => res));
+      
   });
 
-  return arrHotelesConInfo;
+  return puntajesDeHoteles;
 }
 
 router.get("/hoteles", async function (req, res, next) {
  
 
-  let hotelesIds = await consultaDeHoteles();
-  console.log(hotelesIds);
-  let arrHotelesConInfo = await consultaDePuntajes(hotelesIds);
-  res.json(arrHotelesConInfo);
+  // let hotelesIds = await consultaDeHoteles();
+  let mockIds = [
+    8051135, 5931564,  291801
+  ]
+  let respuesta = await consultaDePuntajes(mockIds);
+
+  Promise.all(respuesta).then((values) => {
+    res.json(values);
+  });
+
+
+
 });
 
 module.exports = router;
