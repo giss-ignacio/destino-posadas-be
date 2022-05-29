@@ -1,6 +1,7 @@
 const axios = require("axios");
 var express = require("express");
 const router = express.Router();
+require("dotenv").config();
 
 //GET HOTELES
 
@@ -24,7 +25,7 @@ async function consultaDeHoteles() {
     },
     headers: {
       "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-      "X-RapidAPI-Key": "poner rapid api key",
+      "X-RapidAPI-Key": process.env.RAPIDAPIKEY,
     },
   };
 
@@ -61,7 +62,7 @@ async function consultaUnHotel(id) {
       timeout: 8000,
       headers: {
         "X-RapidAPI-Host": "booking-com.p.rapidapi.com",
-        "X-RapidAPI-Key": "d1c9714594msh22b6c163e2c4be6p129e59jsnc056ede1f158",
+        "X-RapidAPI-Key": process.env.RAPIDAPIKEY,
       },
     });
     if (res.status == 200) {
@@ -79,7 +80,7 @@ async function consultaDePuntajes(hotelesIds) {
   let puntajesDeHoteles = [];
   let resultado;
 
-  for (let i = 0; i < hotelesIds.length; i++) {
+  for (let i = 0; i < 5; i++) {
     resultado = await new Promise((resolve, reject) => {
       setTimeout(function () {
         resolve(consultaUnHotel(hotelesIds[i]));
