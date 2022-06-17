@@ -1,6 +1,16 @@
 version: '3.2'
 services:
-   
+
+    phpmyadmin:
+        image: phpmyadmin
+        restart: always
+        ports:
+            - 8080:80
+        environment:
+            - PMA_ARBITRARY=1
+        networks:
+            - posadas-net
+
     mariadb:
         image: mariadb:10.8.3
         container_name: posadas-mariadb
@@ -13,8 +23,9 @@ services:
         ports:
             - 5004:3306
         networks:
-          - posadas-net 
-    
+            - posadas-net
+        hostname: mariadb
+
     orion:
         image: fiware/orion
         hostname: orion
@@ -23,7 +34,7 @@ services:
             - "1026:1026"
         command: -dbhost mongodb -logLevel DEBUG -noCache
         networks:
-            - posadas-net  
+            - posadas-net
 
     cygnus:
         image: fiware/cygnus-ngsi
@@ -31,7 +42,7 @@ services:
         container_name: fiware-cygnus
         ports:
             - "5055:5055"
-            - "5080:5080" 
+            - "5080:5080"
         environment:
             - CYGNUS_MYSQL_SERVICE_PORT=5055
             - CYGNUS_MYSQL_HOST=posadas-mariadb
@@ -43,21 +54,21 @@ services:
             - "CYGNUS_SERVICE_PORT=5055"
             - "CYGNUS_API_PORT=5080"
         networks:
-            - posadas-net  
+            - posadas-net
         depends_on:
             - mariadb
-    
+
     mongodb:
         image: mongo:3.6
         container_name: mongodb
         hostname: mongodb
         ports:
-            - "27017:27017" 
+            - "27017:27017"
         command: --bind_ip_all --smallfiles
         volumes:
             - mongo_db_volume:/data
         networks:
-            - posadas-net  
+            - posadas-net
 
     adminmongo:
         image: mrvautin/adminmongo
@@ -66,8 +77,8 @@ services:
         environment:
             - HOST=0.0.0.0
         networks:
-            - posadas-net  
-    
+            - posadas-net
+
     grafana:
         image: grafana/grafana-oss
         ports:
@@ -77,11 +88,11 @@ services:
         volumes:
             - grafana-storage:/var/lib/grafana #admin - ORT2022!
         networks:
-            - posadas-net  
+            - posadas-net
 
 networks:
-  posadas-net:
-    name: posadas-network
+    posadas-net:
+        name: posadas-network
 
 volumes:
     posadas_db_volume:
