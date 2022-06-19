@@ -1,21 +1,19 @@
-hotel_id;Nombre;Direccion;Ciudad;id_zona;review_nr;Tipo
-291801;Hotel Posadas;Bolivar 1949;Posadas;-1008461;1164;Hotel
-5931564;Hotel Vanderloo;Calle Barrufaldi 2084;Posadas;-1008461;347;Hotel
-582513;Bagu Grand Crucero Posadas;San Lorenzo 2208;Posadas;-1008461;840;Hotel
-8235724;Moroty;Perito Moreno 4127;Posadas;-1008461;17;Apartment
-557681;Hotel Continental;Bolivar 1879;Posadas;-1008461;888;Hotel
-5009320;Hotel POSTA NORTE;4029 Avenida Francisco de Haro Francisco de haro 4029;Posadas;-1008461;106;Hotel
-4050366;Como en casa Hostel;Junin 2129;Posadas;-1008461;110;Guest house
-7159305;Monoambiente centrico;1724 La Rioja;Posadas;-1008461;54;Apartment
-1522452;Departamentos Rodrigo;Moritan 2211;Posadas;-1008461;175;Apartment
-280852;La Mision Posadas;Avda Luis Quaranta 6150;Posadas;-1008461;556;Hotel
-1093286;Hotel Colon;Calle Colon 2169;Posadas;-1008461;112;Hotel
-8098309;El Palomar Dpto 2 Dorm Equipado con AC A cuadras del centro Entrada independiente;3373 Libano;Posadas;-1008461;12;Apartment
-302053;Hotel Urbano Posadas;Bolivar 2176;Posadas;-1008461;866;Hotel
-536198;Hosteria Maryland;Avenida Francisco de Haro  3569;Posadas;-1008461;292;Inn
-8149005;Rinconcito Felix Bogado;1508 Coronel Felix Bogado;Posadas;-1008461;9;Apartment
-8445911;Quinta;5525 Calle Santa Ana;Posadas;-1008461;;Holiday home
-8567988;Costanera Posadas -Torre Albor-Temporario;LANUSE 1785 CASI BENABIDEZ TERCER PISO;Posadas;-1008461;1;Apartment
-8212408;Flower's house;5521 Calle Santa Ana;Posadas;-1008461;1;Holiday home
-8403812;Hermoso y Comodo dpto centrico;1386 San Lorenzo;Posadas;-1008461;5;Apartment
-5906115;Departamento nuevo,amplio y cercano al centro en Posadas;3009 Beron de Astrada;Posadas;-1008461;42;Apartment
+;;TABLA Valoraciones;;;;Tabla Hoteles;;
+;;;;;;;;
+h;Booking;Columna MySQL;Tipo de Datos;;Booking;Columna MySQL;Tipo de Datos;
+Calificación;Calificaciom;Calificacion;Varchar 50;;hotel_id;hotel_id;INT;
+Impuestos Dólar;hotel_services;Servicios;Float;;city;Ciudad;Varchar 50;
+Impuestos Pesos;Facilities;Instalaciones;Float;;address;Direccion;Varchar 50;
+Limpieza;Comfort;Confort;Float;;accommodation_type_name;Tipo;Varchar 50;
+Número de Comentarios;Staff;Personal;Float;;review_nr;review_nr;INT;
+Personal;Value for money;Money;Varchar 50;;ufi;id_zona;INT;
+Precio/Calidad;Cleanliness;Clean;Float;;hotel_name;Nombre;Varchar 50;
+Puntuación;Total;Total;Float;;;id;INT (PK);
+Tarifa Dólar;Location;Ubicacion;Varchar 50;;;;;
+Tarifa Pesos;hotel_wifi;WIFI;Float;;;;;
+Total Dólar;Hotel_ID;Hotel_ID;INT;;;;;
+Total Pesos;;time;DATETIME;;;;;
+Ubicación;;id;INT (PK);;;;;
+WiFi;;;;;;;;
+(en blanco);;;;;;;;
+Total general;;;;;;;;

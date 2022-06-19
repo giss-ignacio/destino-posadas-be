@@ -10,3 +10,4 @@ CREATE TABLE `Hoteles` (
 	PRIMARY KEY (`id`)
 )
 ;
+ALTER TABLE posadas.Hoteles MODIFY COLUMN id int(11) auto_increment NOT NULL;

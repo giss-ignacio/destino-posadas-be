@@ -29,3 +29,5 @@ var con = mysql.createConnection({
   });
 
   //var sql = "INSERT INTO Valoraciones (time, Hotel_ID, WIFI, Fuente, Valoracion, Clean) VALUES (%s,%s,%s,%s,%s,%s)"%(post.time, post.hotel_ID, post.WIFI, post.fuente, post.valoracion, post.clean);
+
+  //INSERT INTO Hoteles (hotel_id	Nombre,Direccion,Ciudad,id_zona,review_nr,Tipo) VALUES (291801,"Hotel Posadas","Bolivar 1949	Posadas",-1008461,1164,"Hotel")
