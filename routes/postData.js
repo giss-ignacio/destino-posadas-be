@@ -1,15 +1,15 @@
 // var axios = require("axios");
 var mockData = JSON.stringify({
-  id: "8051135",
+  id: "80511352",
   type: "Hotel",
   name: {
     type: "Text",
-    value: "Hilton 2",
+    value: "Hilton 99",
   },
   total: {
     type: "Float",
     value: 8.4,
-  }
+  },
 });
 
 // var config = {
@@ -29,13 +29,12 @@ var mockData = JSON.stringify({
 //     console.log(error);
 //   });
 
-var axios = require('axios');
-
+var axios = require("axios");
 
 // const mockData = {
 //   "id": 8051135,
 //   "type": "Hotel",
-//   "score_breakdown": 
+//   "score_breakdown":
 //       {
 //           "type": "ScoreBreakdown",
 //           "value": {
@@ -113,41 +112,33 @@ var axios = require('axios');
 //             "customer_type": "total"
 //           }
 //           }
-          
-          
 
 //       }
-    
+
 // }
 
-
-
-
 async function subirData(datos) {
-
   var data1 = JSON.stringify({
-    "actionType": "append",
-    "entities": mockData
+    actionType: "append",
+    entities: mockData,
   });
-  
+
   var config = {
-    method: 'post',
-    url: 'http://localhost:1026/v2/op/update',
-    headers: { 
-      'Content-Type': 'application/json'
+    method: "post",
+    url: "http://localhost:1026/v2/op/update",
+    headers: {
+      "Content-Type": "application/json",
     },
-    data: data1
+    data: data1,
   };
-  
+
   axios(config)
-  .then(function (response) {
-    console.log(JSON.stringify(response.data));
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+    .then(function (response) {
+      console.log(JSON.stringify(response.data));
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 }
 
-module.exports = subirData ;
-
-
+module.exports = subirData;
