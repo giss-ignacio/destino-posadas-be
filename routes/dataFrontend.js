@@ -7,7 +7,7 @@ const getData = require("./getData.js");
 
 frontendRouter.get("/hoteles", async function (req, res, next) {
     let respuesta = await getData();
-  
+
     Promise.all([respuesta]).then((values) => {
       res.json(values);
     });
