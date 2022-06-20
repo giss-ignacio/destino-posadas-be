@@ -5,6 +5,7 @@ var cookieParser = require("cookie-parser");
 
 var indexRouter = require("./routes/index");
 var bookingRouter = require("./routes/booking");
+var frontendRouter = require("./routes/dataFrontend");
 var dotenv = require("dotenv");
 var app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/booking", bookingRouter);
+app.use("/api/fedata", frontendRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

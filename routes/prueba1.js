@@ -1,20 +1,16 @@
 var axios = require('axios');
 
 var mockData = {
-  id: "urn:ngsild:Hotel:003",
+  id: "8051135",
   type: "Hotel",
   name: {
     type: "Text",
     value: "Hilton 2",
   },
-  size: {
-    type: "Text",
-    value: "S",
-  },
-  price: {
-    type: "Integer",
-    value: 99,
-  },
+  total: {
+    type: "Float",
+    value: 8.4,
+  }
 };
 
 var data = JSON.stringify({
