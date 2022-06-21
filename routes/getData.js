@@ -1,12 +1,12 @@
-var axios = require('axios');
+var axios = require("axios");
 
 async function getData() {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities/8051135?type=Hotel",
+      url: "http://localhost:1026/v2/entities/",
       method: "get",
       headers: {
-        'Accept': 'application/json'
+        Accept: "application/json",
       },
     });
     if (res.status == 200) {
@@ -20,5 +20,4 @@ async function getData() {
   }
 }
 
-
-module.exports = getData ;
+module.exports = getData;
