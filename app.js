@@ -6,6 +6,7 @@ var cookieParser = require("cookie-parser");
 var indexRouter = require("./routes/index");
 var bookingRouter = require("./routes/booking");
 var frontendRouter = require("./routes/dataFrontend");
+var mockServerRouter = require("./routes/mockDataServer");
 var dotenv = require("dotenv");
 var app = express();
 var cors = require("cors");
@@ -23,6 +24,7 @@ app.use(cors({origin: "*"}))
 app.use("/", indexRouter);
 app.use("/api/booking", bookingRouter);
 app.use("/api/fedata", frontendRouter);
+app.use("/api/mockdata", mockServerRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
