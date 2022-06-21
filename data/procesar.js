@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 function procesarDatos() {
-    let rawdata = fs.readFileSync('./data/todos.json');
+    let rawdata = fs.readFileSync('./data/todos1.json');
     let hoteles = JSON.parse(rawdata); 
 
 
@@ -40,8 +40,8 @@ function procesarDatos() {
         const formattedEntity = {};
         entries.forEach((entry) => {
           formattedEntity[entry[0]] = {
-            type: entry[0] == "Año" || entry[0] == "Categoría" ? "Integer" : isNaN(entry[1]) ? "String" : "Float",
-            value: entry[1]
+            type: entry[0] == "Ano" || entry[0] == "Categoria" ? "Integer" : isNaN(entry[1]) ? "String" : "Float",
+            value:  entry[0] == "Ano" || entry[0] == "Categoria" ?  parseInt(entry[1]) : isNaN(entry[1]) ? entry[1] : parseFloat(entry[1])
           };
         });
         return formattedEntity;
@@ -50,7 +50,7 @@ function procesarDatos() {
       let i = 0;
       const formattedEntities = hoteles.entities.map((entity) => {
         i++;
-        return {...formattedEntity(entity), id:i};
+        return {...formattedEntity(entity), id: "Hotel" + i.toString()};
     });
       
       //console.log(formattedEntities);
