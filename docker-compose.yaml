@@ -79,16 +79,6 @@ services:
         networks:
             - posadas-net
 
-    grafana:
-        image: grafana/grafana-oss
-        ports:
-            - 3000:3000
-        environment:
-            - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-worldmap-panel,grafana-clock-panel,grafana-worldmap-panel
-        volumes:
-            - grafana-storage:/var/lib/grafana #admin - ORT2022!
-        networks:
-            - posadas-net
 
 networks:
     posadas-net:
