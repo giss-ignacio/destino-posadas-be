@@ -1,3 +1,3 @@
 # destino-posadas-be
 
-mongodb://@mongodb      <esto es para conectar
+mongodb://@mongodb <esto es para conectar
