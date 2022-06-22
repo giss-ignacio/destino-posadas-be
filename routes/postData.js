@@ -1,9 +1,8 @@
 var axios = require("axios");
-const fs = require('fs');
+const fs = require("fs");
 
-
-async function subirData(datos) {
-  let hoteles = fs.readFileSync('./data/data.json');
+async function subirData() {
+  let hoteles = fs.readFileSync("./data/data.json");
   var config = {
     method: "post",
     url: "http://localhost:1026/v2/op/update",
