@@ -1,4 +1,6 @@
 var axios = require("axios");
+const fs = require('fs');
+
 var data = JSON.stringify({
   id: "urn:ngsild:Hotel:003",
   type: "Hotel",
@@ -16,14 +18,16 @@ var data = JSON.stringify({
   },
 });
 
+let hoteles = fs.readFileSync('./data/data.json');
 var config = {
   method: "post",
-  url: "http://localhost:1026/v2/entities",
+  url: "http://localhost:1026/v2/op/update",
   headers: {
     "Content-Type": "application/json",
   },
-  data: data,
+  data: hoteles,
 };
+
 
 axios(config)
   .then(function (response) {
