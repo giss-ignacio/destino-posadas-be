@@ -46,7 +46,10 @@ async function getTop3() {
 async function get1Hotel(nombre) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre==" + nombre+"&limit=1000",
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre==" +
+        nombre +
+        "&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -106,9 +109,13 @@ async function getDistribucionHoteles() {
 
     let distriJson = {
       Hoteles: ((Hoteles / total) * 100).toFixed(2),
+      HotelesCant: Hoteles,
       ApartHoteles: ((ApartHoteles / total) * 100).toFixed(2),
+      ApartHotelesCant: ApartHoteles,
       Residenciales: ((Residenciales / total) * 100).toFixed(2),
+      ResidencialesCant: Residenciales,
       Hosterias: ((Hosterias / total) * 100).toFixed(2),
+      HosteriasCant: Hosterias,
     };
 
     //console.log(res.data)
@@ -127,24 +134,28 @@ async function getDistribucionHoteles() {
 async function getPromedioNoche() {
   try {
     let res = await axios({
-      url: 'http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000',
+      url: "http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
       },
     });
 
-    let listaPrecios = res.data.filter(e => {return e.Valor}).map(a => {
-      let valor = a.Valor.replace("p ", "").replace(",","")
-      return parseFloat(valor)
-    })
-    
-    const promTotal = listaPrecios.reduce((a, b) => a + b, 0) / listaPrecios.length;
+    let listaPrecios = res.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        let valor = a.Valor.replace("p ", "").replace(",", "");
+        return parseFloat(valor);
+      });
 
-    console.log(promTotal.toFixed(2))
+    const promTotal =
+      listaPrecios.reduce((a, b) => a + b, 0) / listaPrecios.length;
+
+    console.log(promTotal.toFixed(2));
 
     if (res.status == 200) {
-
       console.log(res.status);
     }
     return parseFloat(promTotal.toFixed(2));
@@ -153,27 +164,29 @@ async function getPromedioNoche() {
   }
 }
 
-
 async function getTotalOpiniones() {
   try {
     let res = await axios({
-      url: 'http://localhost:1026/v2/entities?q=Concepto==Numero de Comentarios&options=keyValues&attrs=Valor&limit=1000',
+      url: "http://localhost:1026/v2/entities?q=Concepto==Numero de Comentarios&options=keyValues&attrs=Valor&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
       },
     });
 
-    let totalComentarios = res.data.filter(e => {return e.Valor}).map(a => {
-      return parseInt(a.Valor)
-    })
-    
+    let totalComentarios = res.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        return parseInt(a.Valor);
+      });
+
     const total = totalComentarios.reduce((a, b) => a + b, 0);
 
-    console.log(total)
+    console.log(total);
 
     if (res.status == 200) {
-
       console.log(res.status);
     }
     return total;
@@ -182,5 +195,11 @@ async function getTotalOpiniones() {
   }
 }
 
-module.exports = { getData, getTop3, get1Hotel, getDistribucionHoteles, getPromedioNoche, getTotalOpiniones };
-
+module.exports = {
+  getData,
+  getTop3,
+  get1Hotel,
+  getDistribucionHoteles,
+  getPromedioNoche,
+  getTotalOpiniones,
+};
