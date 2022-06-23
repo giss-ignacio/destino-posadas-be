@@ -65,5 +65,62 @@ async function get1Hotel(nombre) {
   }
 }
 
+async function getDistribucionHoteles() {
+  try {
+    let resHoteles = await axios({
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hotel&options=count&options=keyValues&attrs=Nombre",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
 
-module.exports = {getData, getTop3, get1Hotel};
+    let resApart = await axios({
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Apart Hotel&options=count&options=keyValues&attrs=Nombre",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resResidencial = await axios({
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Residencial&options=count&options=keyValues&attrs=Nombre",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resHosteria = await axios({
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hosteria&options=count&options=keyValues&attrs=Nombre",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let distriJson = {
+      Hoteles: parseInt(resHoteles.headers['fiware-total-count']),
+      ApartHoteles: parseInt(resApart.headers['fiware-total-count']),
+      Residenciales: parseInt(resHosteria.headers['fiware-total-count']),
+      Hosterias: parseInt(resResidencial.headers['fiware-total-count']),
+    }
+
+
+    //console.log(res.data)
+
+    if (resHoteles.status == 200) {
+      // test for status you want, etc
+      console.log(resHoteles.status);
+    }
+    // Don't forget to return something
+    return distriJson;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+
+
+module.exports = {getData, getTop3, get1Hotel, getDistribucionHoteles };

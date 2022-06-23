@@ -35,4 +35,14 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
     });
       });
 
+
+frontendRouter.get("/distribucionAlojamientos", async function (req, res, next) {
+
+  let hoteles = await getData.getDistribucionHoteles();
+
+  Promise.all([hoteles]).then((values) => {
+    res.json(values);
+  });
+});
+
   module.exports = frontendRouter; 
