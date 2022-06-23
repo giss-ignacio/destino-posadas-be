@@ -195,11 +195,41 @@ async function getTotalOpiniones() {
   }
 }
 
+  async function getServicioPorMes(ano,mes,concepto,tipo) {
+  //Busca el Valor de un conepto filtrando por concepro año mes y tipo
+  try {
+    let resHoteles = await axios({
+     url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano=="+ano+";Mes==" + mes+";Tipo==" + tipo+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Valor",
+     //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano=="+ano+";Mes==" + mes+";Tipo==" + tipo+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
+     //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano==2022;Mes==" + mes+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
+     //url: 'http://localhost:1026/v2/entities?q=Concepto==WiFi;Ano==2022;Mes==Febrero&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano', 
+     method: "get",
+     //params: { locale: "en-gb", hotel_id: id },
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+   // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
+   //console.log(res.data)
+
+    if (resHoteles.status == 200) {
+      // test for status you want, etc
+      console.log(resHoteles.status);
+    }
+    // Don't forget to return something
+    return resHoteles.data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 module.exports = {
   getData,
   getTop3,
   get1Hotel,
   getDistribucionHoteles,
   getPromedioNoche,
+  getServicioPorMes,
   getTotalOpiniones,
 };

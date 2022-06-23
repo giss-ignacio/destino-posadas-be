@@ -63,5 +63,46 @@ frontendRouter.get("/totalOpiniones", async function (req, res, next) {
   });
 });
 
+frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
+  const miAno = req.query.a
+  const miMes = req.query.m
+  const miConcepto = req.query.c
+  const miTipo =req.query.t
+
+  console.log("INICIO - Pregunto");
+  console.log(miAno);
+  console.log(miMes);
+  console.log(miConcepto);
+  console.log(miTipo);
+  console.log("FIN - Pregunto");
+  let Servicios = await getData.getServicioPorMes(miAno,miMes,miConcepto,miTipo);
+  //let Servicios = await getData.getServicioPorMes();
+  //var Cantidad = Servicios.length;
+  var Cantidad = 0;
+  var promedio;
+  var acumulador = 0;
+
+  for (var i=0; i<Servicios.length; i++) {
+    if (Servicios[i].Valor == undefined) {
+      //  block of code to be executed if the condition is true
+      console.log("Se encontro el campo Valor sin Datos");
+    } else {
+      //  block of code to be executed if the condition is false
+      acumulador = acumulador + Servicios[i].Valor;
+      Cantidad ++;
+      console.log(Servicios[i].Valor);   
+    }
+      
+      }
+  promedio = acumulador /Cantidad;
+  console.log("INICIO - Respondo");
+  console.log("Cantidad :" +Cantidad);
+  console.log("promedio :" +promedio);
+  console.log("acumulador :" +acumulador);
+  console.log(Servicios);
+  Promise.all([Servicios]).then((values) => {
+    res.json(values);
+  });
+});
 
   module.exports = frontendRouter; 
