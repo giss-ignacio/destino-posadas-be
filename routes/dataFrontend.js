@@ -14,7 +14,6 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
 
 frontendRouter.get("/top3hoteles", async function (req, res, next) {
   let respuesta = await getData.getTop3();
-  var arrayDeHoteles = [];
 
   function obtenerValor(entidad, concepto) {
     return entidad.find((e) => e.Concepto.value == concepto).Valor.value;
@@ -58,8 +57,6 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
     .replace("p ", "$")
     .replace(",", ".");
 
-  // console.log(found);
-
   let data3Hoteles = {
     hotel1: {
       nombre: nombre1,
@@ -90,17 +87,7 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
     },
   };
 
-  console.log(data3Hoteles);
-
-  arrayDeHoteles.push(dato1hotel, dato2hotel, dato3hotel);
-
-  //   respuesta.forEach(async function(hotel, index) {
-  //     let dato1hotel = await getData.get1Hotel(hotel.Nombre);
-  //     console.log(`${index} : ${hotel.Nombre}`);
-  //     arrayDeHoteles.push(dato1hotel);
-  // });
-
-  Promise.all([arrayDeHoteles]).then((values) => {
+  Promise.all([data3Hoteles]).then((values) => {
     res.json(values);
   });
 });
