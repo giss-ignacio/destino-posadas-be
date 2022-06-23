@@ -65,7 +65,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad1,
       ubicacion: valorUbicacion1,
       wifi: valorWifi1,
-      total: valorTotal1,
+      total: (
+        (valorPers1 +
+          valorLimpieza1 +
+          valorPrecioCalidad1 +
+          valorUbicacion1 +
+          valorWifi1) /
+        5
+      ).toFixed(1),
     },
     hotel2: {
       nombre: nombre2,
@@ -74,7 +81,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad2,
       ubicacion: valorUbicacion2,
       wifi: valorWifi2,
-      total: valorTotal2,
+      total: (
+        (valorPers2 +
+          valorLimpieza2 +
+          valorPrecioCalidad2 +
+          valorUbicacion2 +
+          valorWifi2) /
+        5
+      ).toFixed(1),
     },
     hotel3: {
       nombre: nombre3,
@@ -83,7 +97,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad3,
       ubicacion: valorUbicacion3,
       wifi: valorWifi3,
-      total: valorTotal3,
+      total: (
+        (valorPers3 +
+          valorLimpieza3 +
+          valorPrecioCalidad3 +
+          valorUbicacion3 +
+          valorWifi3) /
+        5
+      ).toFixed(1),
     },
   };
 
