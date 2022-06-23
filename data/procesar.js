@@ -1,17 +1,26 @@
 const fs = require('fs');
 
 function procesarDatos() {
-    let rawdata = fs.readFileSync('./data/todos1.json');
+    let rawdata = fs.readFileSync('./data/data.json');
     let hoteles = JSON.parse(rawdata); 
 
 
-    // const entities = [
+    return hoteles.filter(e => {
+      console.log(e);
+      return e.Ciudad && e.Ciudad.value == "Posadas"
+    })
+
+
+
+    // const entities = { 
+    //   asda: "lala",
+    //   entities: [
     //     {
     //       type: "Hotel",
     //       Mes: "Noviembre",
     //       Año: "2021",
     //       País: "Argentina",
-    //       Ciudad: "Posadas",
+    //       Ciudad: {value:"Posadas", type:"String"},
     //       Tipo: "Hotel",
     //       Categoría: "4",
     //       Nombre: "HA Urbano Posadas",
@@ -24,7 +33,7 @@ function procesarDatos() {
     //       Mes: "Noviembre",
     //       Año: "2021",
     //       País: "Argentina",
-    //       Ciudad: "Posadas",
+    //       Ciudad: {value:"Posadas2", type:"String"},
     //       Tipo: "Hotel",
     //       Categoría: "4",
     //       Nombre: "HA Urbano Posadas",
@@ -33,29 +42,34 @@ function procesarDatos() {
     //       Valor: "8.5",
     //       FechadeConsultadeTarifa: "11/18/21"
     //     }
-    //   ];
+    //   ]};
       
-      const formattedEntity = (entity) => {
-        const entries = Object.entries(entity);
-        const formattedEntity = {};
-        entries.forEach((entry) => {
-          formattedEntity[entry[0]] = {
-            type: entry[0] == "Ano" || entry[0] == "Categoria" ? "Integer" : isNaN(entry[1]) ? "String" : "Float",
-            value:  entry[0] == "Ano" || entry[0] == "Categoria" ?  parseInt(entry[1]) : isNaN(entry[1]) ? entry[1] : parseFloat(entry[1])
-          };
-        });
-        return formattedEntity;
-      };
-      
-      let i = 0;
-      const formattedEntities = hoteles.entities.map((entity) => {
-        i++;
-        return {...formattedEntity(entity), id: "Hotel" + i.toString()};
-    });
-      
-      //console.log(formattedEntities);
+    // return entities.entities.filter(e => {
+    //   return e.Ciudad.value == "Posadas"
+    // })
 
-    return formattedEntities;
+
+    //   const formattedEntity = (entity) => {
+    //     const entries = Object.entries(entity);
+    //     const formattedEntity = {};
+    //     entries.forEach((entry) => {
+    //       formattedEntity[entry[0]] = {
+    //         type: entry[0] == "Ano" || entry[0] == "Categoria" ? "Integer" : isNaN(entry[1]) ? "String" : "Float",
+    //         value:  entry[0] == "Ano" || entry[0] == "Categoria" ?  parseInt(entry[1]) : isNaN(entry[1]) ? entry[1] : parseFloat(entry[1])
+    //       };
+    //     });
+    //     return formattedEntity;
+    //   };
+      
+    //   let i = 0;
+    //   const formattedEntities = hoteles.entities.map((entity) => {
+    //     i++;
+    //     return {...formattedEntity(entity), id: "Hotel" + i.toString()};
+    // });
+      
+    //   //console.log(formattedEntities);
+
+    // return formattedEntities;
 }
 
 let resultado = JSON.stringify(procesarDatos());
