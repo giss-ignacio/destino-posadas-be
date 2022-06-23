@@ -30,7 +30,7 @@ async function getTop3() {
       },
     });
 
-    console.log(res.data)
+    console.log(res.data);
 
     if (res.status == 200) {
       // test for status you want, etc
@@ -46,13 +46,12 @@ async function getTop3() {
 async function get1Hotel(nombre) {
   try {
     let res = await axios({
-      url: 'http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre=='+nombre,
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre==" + nombre,
       method: "get",
       headers: {
         Accept: "application/json",
       },
     });
-
 
     if (res.status == 200) {
       // test for status you want, etc
@@ -99,13 +98,18 @@ async function getDistribucionHoteles() {
       },
     });
 
-    let distriJson = {
-      Hoteles: parseInt(resHoteles.headers['fiware-total-count']),
-      ApartHoteles: parseInt(resApart.headers['fiware-total-count']),
-      Residenciales: parseInt(resHosteria.headers['fiware-total-count']),
-      Hosterias: parseInt(resResidencial.headers['fiware-total-count']),
-    }
+    let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
+    let ApartHoteles = parseInt(resApart.headers["fiware-total-count"]);
+    let Residenciales = parseInt(resHosteria.headers["fiware-total-count"]);
+    let Hosterias = parseInt(resResidencial.headers["fiware-total-count"]),
+      total = Hoteles + ApartHoteles + Residenciales + Hosterias;
 
+    let distriJson = {
+      Hoteles: ((Hoteles / total) * 100).toFixed(2),
+      ApartHoteles: ((ApartHoteles / total) * 100).toFixed(2),
+      Residenciales: ((Residenciales / total) * 100).toFixed(2),
+      Hosterias: ((Hosterias / total) * 100).toFixed(2),
+    };
 
     //console.log(res.data)
 
@@ -120,7 +124,4 @@ async function getDistribucionHoteles() {
   }
 }
 
-
-
-
-module.exports = {getData, getTop3, get1Hotel, getDistribucionHoteles };
+module.exports = { getData, getTop3, get1Hotel, getDistribucionHoteles };
