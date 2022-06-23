@@ -120,7 +120,34 @@ async function getDistribucionHoteles() {
   }
 }
 
+async function getPromedioNoche(nombre) {
+  try {
+    let res = await axios({
+      url: 'http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor',
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let listaPrecios = res.data.filter(e => {return e.Valor}).map(a => {
+      let valor = a.Valor.replace("p ", "").replace(",","")
+      return parseFloat(valor)
+    })
+    
+    const promTotal = listaPrecios.reduce((a, b) => a + b, 0) / listaPrecios.length;
+
+    console.log(promTotal.toFixed(2))
+
+    if (res.status == 200) {
+
+      console.log(res.status);
+    }
+    return parseFloat(promTotal.toFixed(2));
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 
-
-module.exports = {getData, getTop3, get1Hotel, getDistribucionHoteles };
+module.exports = {getData, getTop3, get1Hotel, getDistribucionHoteles, getPromedioNoche };

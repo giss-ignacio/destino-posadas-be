@@ -45,4 +45,15 @@ frontendRouter.get("/distribucionAlojamientos", async function (req, res, next) 
   });
 });
 
+frontendRouter.get("/promedioNoche", async function (req, res, next) {
+
+  let hoteles = await getData.getPromedioNoche();
+
+  Promise.all([hoteles]).then((values) => {
+    res.json(values);
+  });
+});
+
+
+
   module.exports = frontendRouter; 
