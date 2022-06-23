@@ -54,6 +54,14 @@ frontendRouter.get("/promedioNoche", async function (req, res, next) {
   });
 });
 
+frontendRouter.get("/totalOpiniones", async function (req, res, next) {
+
+  let opiniones = await getData.getTotalOpiniones();
+
+  Promise.all([opiniones]).then((values) => {
+    res.json(values);
+  });
+});
 
 
   module.exports = frontendRouter; 

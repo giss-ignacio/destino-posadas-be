@@ -23,7 +23,7 @@ async function getData() {
 async function getTop3() {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion&orderBy=!Valor&limit=3&options=keyValues&attrs=Nombre",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion&orderBy=!Valor&limit=3&options=keyValues&attrs=Nombre&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -46,7 +46,7 @@ async function getTop3() {
 async function get1Hotel(nombre) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre==" + nombre,
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Nombre==" + nombre+"&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -67,7 +67,7 @@ async function get1Hotel(nombre) {
 async function getDistribucionHoteles() {
   try {
     let resHoteles = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hotel&options=count&options=keyValues&attrs=Nombre",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hotel&options=count&options=keyValues&attrs=Nombre&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -75,7 +75,7 @@ async function getDistribucionHoteles() {
     });
 
     let resApart = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Apart Hotel&options=count&options=keyValues&attrs=Nombre",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Apart Hotel&options=count&options=keyValues&attrs=Nombre&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -83,7 +83,7 @@ async function getDistribucionHoteles() {
     });
 
     let resResidencial = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Residencial&options=count&options=keyValues&attrs=Nombre",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Residencial&options=count&options=keyValues&attrs=Nombre&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -91,7 +91,7 @@ async function getDistribucionHoteles() {
     });
 
     let resHosteria = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hosteria&options=count&options=keyValues&attrs=Nombre",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Puntuacion;Tipo==Hosteria&options=count&options=keyValues&attrs=Nombre&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -124,10 +124,10 @@ async function getDistribucionHoteles() {
   }
 }
 
-async function getPromedioNoche(nombre) {
+async function getPromedioNoche() {
   try {
     let res = await axios({
-      url: 'http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor',
+      url: 'http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000',
       method: "get",
       headers: {
         Accept: "application/json",
@@ -154,5 +154,33 @@ async function getPromedioNoche(nombre) {
 }
 
 
-module.exports = {getData, getTop3, get1Hotel, getDistribucionHoteles, getPromedioNoche };
+async function getTotalOpiniones() {
+  try {
+    let res = await axios({
+      url: 'http://localhost:1026/v2/entities?q=Concepto==Numero de Comentarios&options=keyValues&attrs=Valor&limit=1000',
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let totalComentarios = res.data.filter(e => {return e.Valor}).map(a => {
+      return parseInt(a.Valor)
+    })
+    
+    const total = totalComentarios.reduce((a, b) => a + b, 0);
+
+    console.log(total)
+
+    if (res.status == 200) {
+
+      console.log(res.status);
+    }
+    return total;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+module.exports = { getData, getTop3, get1Hotel, getDistribucionHoteles, getPromedioNoche, getTotalOpiniones };
 
