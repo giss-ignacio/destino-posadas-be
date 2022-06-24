@@ -209,7 +209,7 @@ async function getTotalOpiniones() {
         Accept: "application/json",
       },
     });
-
+  var respuesta = [];
    // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
    //console.log(res.data)
 

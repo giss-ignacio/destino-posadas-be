@@ -120,6 +120,7 @@ frontendRouter.get("/totalOpiniones", async function (req, res, next) {
 });
 
 frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
+  // Devuelve el promedio de todos los resultados obtenidos de Valor segun el criterio ingresado
   const miAno = req.query.a;
   const miMes = req.query.m;
   const miConcepto = req.query.c;
@@ -142,6 +143,7 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   var Cantidad = 0;
   var promedio;
   var acumulador = 0;
+  var respuesta = [];
 
   for (var i = 0; i < Servicios.length; i++) {
     if (Servicios[i].Valor == undefined) {
@@ -160,8 +162,9 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   console.log("promedio :" + promedio);
   console.log("acumulador :" + acumulador);
   console.log(Servicios);
-  Promise.all([Servicios]).then((values) => {
-    res.json(values);
+  Promise.all([promedio]).then((values) => {
+   //res.promedio;
+   res.json(values);
   });
 });
 
