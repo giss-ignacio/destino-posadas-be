@@ -23,7 +23,10 @@ async function getData() {
 async function getPromedioPosadas(conceptoBuscado) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Concepto=="+conceptoBuscado+"&options=count&limit=1000&options=keyValues&attrs=Valor",
+      url:
+        "http://localhost:1026/v2/entities?q=Concepto==" +
+        conceptoBuscado +
+        "&options=count&limit=1000&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -250,15 +253,9 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
         Accept: "application/json",
       },
     });
-<<<<<<< HEAD
-  var respuesta = [];
-   // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
-   //console.log(res.data)
-=======
 
     // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
     //console.log(res.data)
->>>>>>> b5e3afe9b71c6fa0e2f303f5802c10414354456e
 
     if (resHoteles.status == 200) {
       // test for status you want, etc
