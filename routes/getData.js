@@ -1,4 +1,7 @@
 var axios = require("axios");
+const enumMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const enumAlojamientos = ['Hotel', 'Residencial', 'Apart Hotel', 'Hosteria']
 
 async function getData() {
   try {
@@ -23,7 +26,10 @@ async function getData() {
 async function getPromedioPosadas(conceptoBuscado) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Concepto=="+conceptoBuscado+"&options=count&limit=1000&options=keyValues&attrs=Valor",
+      url:
+        "http://localhost:1026/v2/entities?q=Concepto==" +
+        conceptoBuscado +
+        "&options=count&limit=1000&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -166,7 +172,7 @@ async function getDistribucionHoteles() {
 async function getPromedioNoche() {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -361,11 +367,173 @@ async function ArmarTabla() {
     }
     // Don't forget to return something
     return res.data;
+async function getEvolucionMensualPrecio() {
+
+  try {
+   
+    let resNoviembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[10]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resDiciembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[11]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resEnero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[0]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resFebrero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[01]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let listaPreciosNov = resNoviembre.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosDic = resDiciembre.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosEne = resEnero.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosFeb = resFebrero.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+
+    const maxNov = Math.max(...listaPreciosNov);
+    const maxDic = Math.max(...listaPreciosDic);
+    const maxEne = Math.max(...listaPreciosEne);
+    const maxFeb = Math.max(...listaPreciosFeb);
+
+    const minNov = Math.min(...listaPreciosNov);
+    const minDic = Math.min(...listaPreciosDic);
+    const minEne = Math.min(...listaPreciosEne);
+    const minFeb = Math.min(...listaPreciosFeb);
+
+
+    jsonMaxMin = {
+      maxNov : maxNov,
+      minNov : minNov,
+      maxDic : maxDic,
+      minDic : minDic,
+      maxEne : maxEne,
+      minEne : minEne,
+      maxFeb : maxFeb,
+      minFeb : minFeb,
+    }
+
+    return jsonMaxMin;
   } catch (err) {
     console.error(err);
   }
 }
 
+<<<<<<< HEAD
+=======
+
+
+async function getEvolucionPuntajes(mes, tipoAlojamiento) {
+
+  let evoHotelesXMes = [];
+  let evoResidencialesXMes =[];
+  let evoApartsXMes = [];
+  let evoHosteriasXMes = [];
+  try {
+
+    
+    for (const alojamiento of enumAlojamientos) {
+
+      for (const mes of enumMeses) {
+        let res = await axios({
+          url: "http://localhost:1026/v2/entities?q=Mes==" + mes +";Tipo=="+alojamiento+
+          ";Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+          method: "get",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        let listaPuntuacionesMes = res.data
+          .filter((e) => {
+            return e.Valor;
+          })
+          .map((a) => {
+            let valor = a.Valor.replace("p ", "").replace(",", "");
+            return parseFloat(valor);
+          });
+
+        const promTotal =
+        listaPuntuacionesMes.reduce((a, b) => a + b, 0) / listaPuntuacionesMes.length;
+
+        console.log(promTotal.toFixed(2));
+
+        if (alojamiento === enumAlojamientos[0]) {
+          evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else if(alojamiento === enumAlojamientos[1]){
+          evoResidencialesXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else if(alojamiento === enumAlojamientos[2]){
+          evoApartsXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else {
+          evoHosteriasXMes.push(parseFloat(promTotal.toFixed(2)))
+        }
+      }
+    }
+
+
+    return [evoHotelesXMes, evoResidencialesXMes, evoApartsXMes, evoHosteriasXMes];
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+>>>>>>> 7529a6b2a17f1850395c5efffe4f03247dfe2801
 module.exports = {
   getData,
   getTop3,
@@ -375,7 +543,12 @@ module.exports = {
   getServicioPorMes,
   getTotalOpiniones,
   getPromedioPosadas,
+<<<<<<< HEAD
   getServiciosHistorico2022,
   getPromedioCxTipo,
   ArmarTabla,
+=======
+  getEvolucionMensualPrecio,
+  getEvolucionPuntajes
+>>>>>>> 7529a6b2a17f1850395c5efffe4f03247dfe2801
 };
