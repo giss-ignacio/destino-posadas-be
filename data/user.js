@@ -29,7 +29,6 @@ async function getUser(id) {
 async function addUser(user) {
   const connectiondb = await connection.getConnection();
   user.favoritos = [];
-  user.rutinas = [];
   user.activo = true;
   if (!user.rol) {
     user.rol = "usuario";
@@ -50,16 +49,6 @@ async function updateUser(id, user) {
     .db(DATABASE)
     .collection(COLLECTION_USERS)
     .updateOne({ _id: o_id }, { $set: user });
-  return result;
-}
-
-async function updateRutinas(id, rutinas) {
-  const connectiondb = await connection.getConnection();
-  const o_id = parseObjectId(id);
-  const result = connectiondb
-    .db(DATABASE)
-    .collection(COLLECTION_USERS)
-    .updateOne({ _id: o_id }, { $set: { rutinas: rutinas } });
   return result;
 }
 
@@ -148,11 +137,9 @@ module.exports = {
   generatedAuthToken,
   setFavorito,
   getUser,
-  getUserRoutines,
   getAllUsers,
   deleteUser,
   addAdmin,
   getFavoritos,
   updateUser,
-  updateRutinas,
 };

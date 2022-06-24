@@ -64,7 +64,7 @@ frontendRouter.get("/totalOpiniones", async function (req, res, next) {
   });
 });
 
-  router.post("/login", async (req, res) => {
+frontendRouter.post("/login", async (req, res) => {
     try {
       const user = await data.findByCredentials(
         req.body.email,
