@@ -12,6 +12,30 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
   });
 });
 
+frontendRouter.get("/promedioPosadas", async function (req, res, next) {
+  
+  let respuestaPersonal = await getData.getPromedioPosadas("Personal");
+  let respuestaLimpieza = await getData.getPromedioPosadas("Limpieza");
+  let respuestaPrecioCalidad = await getData.getPromedioPosadas("Precio/Calidad");
+  let respuestaUbicacion = await getData.getPromedioPosadas("Ubicacion");
+  let respuestaWifi = await getData.getPromedioPosadas("WiFi");
+  let respuestaTotal = await getData.getPromedioPosadas("Puntuacion");
+
+  let promedioPuntuaciones = {
+    personal: parseFloat(respuestaPersonal.toFixed(2)),
+    limpieza: parseFloat(respuestaLimpieza.toFixed(2)),
+    precioCalidad: parseFloat(respuestaPrecioCalidad.toFixed(2)),
+    ubicacion: parseFloat(respuestaUbicacion.toFixed(2)),
+    wifi: parseFloat(respuestaWifi.toFixed(2)),
+    total: parseFloat(respuestaTotal.toFixed(2))
+  }
+
+  Promise.all([respuestaTotal,respuestaPersonal,
+    respuestaLimpieza,respuestaPrecioCalidad,respuestaUbicacion,respuestaWifi]).then((values) => {
+    res.json(promedioPuntuaciones);
+  });
+});
+
 frontendRouter.get("/top3hoteles", async function (req, res, next) {
   let respuesta = await getData.getTop3();
 
@@ -65,7 +89,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad1,
       ubicacion: valorUbicacion1,
       wifi: valorWifi1,
-      total: valorTotal1,
+      total: (
+        (valorPers1 +
+          valorLimpieza1 +
+          valorPrecioCalidad1 +
+          valorUbicacion1 +
+          valorWifi1) /
+        5
+      ).toFixed(1),
     },
     hotel2: {
       nombre: nombre2,
@@ -74,7 +105,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad2,
       ubicacion: valorUbicacion2,
       wifi: valorWifi2,
-      total: valorTotal2,
+      total: (
+        (valorPers2 +
+          valorLimpieza2 +
+          valorPrecioCalidad2 +
+          valorUbicacion2 +
+          valorWifi2) /
+        5
+      ).toFixed(1),
     },
     hotel3: {
       nombre: nombre3,
@@ -83,7 +121,14 @@ frontendRouter.get("/top3hoteles", async function (req, res, next) {
       precioCalidad: valorPrecioCalidad3,
       ubicacion: valorUbicacion3,
       wifi: valorWifi3,
-      total: valorTotal3,
+      total: (
+        (valorPers3 +
+          valorLimpieza3 +
+          valorPrecioCalidad3 +
+          valorUbicacion3 +
+          valorWifi3) /
+        5
+      ).toFixed(1),
     },
   };
 
