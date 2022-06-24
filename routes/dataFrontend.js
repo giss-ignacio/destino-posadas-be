@@ -186,10 +186,10 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   //let Servicios = await getData.getServicioPorMes();
   //var Cantidad = Servicios.length;
   var Cantidad = 0;
-  var promedio;
+  var promedio = 0;
   var acumulador = 0;
   var respuesta = [];
-
+//  if(Servicios.length<1){
   for (var i = 0; i < Servicios.length; i++) {
     if (Servicios[i].Valor == undefined) {
       //  block of code to be executed if the condition is true
@@ -202,6 +202,9 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
     }
   }
   promedio = acumulador / Cantidad;
+//  }
+ 
+  
   console.log("INICIO - Respondo");
   console.log("Cantidad :" + Cantidad);
   console.log("promedio :" + promedio);
@@ -209,8 +212,40 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   console.log(Servicios);
   Promise.all([promedio]).then((values) => {
    //res.promedio;
+  //  let promedioPuntuacion = res.data
+  //  .filter((e) => {
+  //    return e.Valor;
+  //  })
+  //  .map((a) => {
+  //    return parseInt(a.Valor);
+  //  });
    res.json(values);
   });
 });
 
+frontendRouter.get("/getServiciosHistorico2022/", async function (req, res, next) {
+  const miConcepto = req.query.c;
+  // var arr = Array.from(Array(4), () => new Array(12));
+  // for (var i = 0; i < 4; i++) {
+  //      for (var z = 0; z < 12; z++) {
+  //        h=d_t.getFullYear()
+  //        j=d_t.getMonth()
+  //        arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
+  //      }   
+  //   }
+
+  // console.log("llamada a ENDPOINT : getServiciosHistorico2022/")
+  // console.log("INICIO - Pregunto");
+  // console.log(miConcepto);
+  // console.log("FIN - Pregunto");
+  let Servicios = await getData.getServiciosHistorico2022(miConcepto);
+  //console.log("respuesta recibida de get2022 ");
+  //console.log(Servicios);
+  //res.json.Servicios;
+  Promise.all([Servicios]).then((values) => {
+    console.log("Envio a Front :")
+    console.log(Servicios)
+    res.json(values);
+  });
+});
 module.exports = frontendRouter;

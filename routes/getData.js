@@ -250,15 +250,9 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
         Accept: "application/json",
       },
     });
-<<<<<<< HEAD
-  var respuesta = [];
-   // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
-   //console.log(res.data)
-=======
 
     // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
     //console.log(res.data)
->>>>>>> b5e3afe9b71c6fa0e2f303f5802c10414354456e
 
     if (resHoteles.status == 200) {
       // test for status you want, etc
@@ -266,6 +260,107 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
     }
     // Don't forget to return something
     return resHoteles.data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getServiciosHistorico2022(concepto) {
+ // j = concepto;
+  var tablaMes =[
+    {mes:"Enero"},{mes:"Febrero"},{mes:"Marzo"},{mes:"Abril"},{mes:"Mayo"},{mes:"Junio"},{mes:"Julio"},{mes:"Agosto"},{mes:"Septiembre"},{mes:"Octubre"},{mes:"Noviembre"},{mes:"Diciembre"}
+  ]
+  var tablaTipo =[
+    {tipo:"Hotel"},{tipo:"Apart Hotel"},{tipo:"Hostería"},{tipo:"Residencial"}
+  ]
+    
+    // ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+    // ["Hotel","Apart Hotel","Hostería","Residencial"]
+
+  var arr = Array.from(Array(4), () => new Array(12));
+  for (var i = 0; i < 4; i++) {
+    for (var z = 0; z < 12; z++) {
+      var promedioAxu = await getPromedioCxTipo(2022,tablaMes[z].mes,concepto,tablaTipo[i].tipo)
+      //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
+      console.log("Envio")
+      arr[i][z] = {x:"2022,"+(z+1)+",1",y:""+promedioAxu+""};
+    }   
+ }
+ //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
+  console.log("Respuesta al endpoint");
+  console.log(arr);
+  console.log("Respuesta promedioAxu");
+  console.log(promedioAxu);
+  return arr;
+
+}
+async function getPromedioCxTipo(a,m,c,t) {
+  try {
+      let res = await axios({
+        url: "http://localhost:3009/api/fedata/getServicioPorMes?a="+a+"&m="+m+"&c="+c+"&t="+t+"",
+        method: "get",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+  
+      let promedioPuntuacion = res.data
+      console.log("Promedio Puntuacion :"+promedioPuntuacion);
+  
+      if (res.status == 200) {
+        // test for status you want, etc
+        console.log(res.status);
+      }
+      // Don't forget to return something
+      return promedioPuntuacion;//.parseInt;
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+async function ArmarTabla() {
+  try {
+    var ano = 2022
+    var mes = "Febrero"
+    var concepto = "WiFi"
+    var tipo ="Hotel"
+   
+    
+   const d_t = new Date();
+    
+   let year = d_t.getFullYear();
+   let month = d_t.getMonth();
+   let day = d_t.getDate();
+   // let hour = d_t.getHours();
+   // let minute = d_t.getMinutes();
+   var tabla =[
+       ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+       ["Hotel","Apart Hotel","Hostería","Residencial"]
+   ]
+   
+    let miPromedio = await getData.getPromedioCxTipo(ano,mes,concepto,tipo);
+   console.log("mi promedio :"+miPromedio);
+   
+   var arr = Array.from(Array(4), () => new Array(12));
+    for (var i = 0; i < 4; i++) {
+         for (var z = 0; z < 12; z++) {
+           h=d_t.getFullYear()
+           j=d_t.getMonth()
+           arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
+         }   
+      }
+   
+   console.log("arr");
+   console.log(arr);
+   console.log(year);
+   console.log(month);
+   console.log(day);
+    if (res.status == 200) {
+      // test for status you want, etc
+      console.log(res.status);
+    }
+    // Don't forget to return something
+    return res.data;
   } catch (err) {
     console.error(err);
   }
@@ -280,4 +375,7 @@ module.exports = {
   getServicioPorMes,
   getTotalOpiniones,
   getPromedioPosadas,
+  getServiciosHistorico2022,
+  getPromedioCxTipo,
+  ArmarTabla,
 };
