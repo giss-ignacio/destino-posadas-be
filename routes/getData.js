@@ -20,10 +20,10 @@ async function getData() {
   }
 }
 
-async function getPromedioPosadas() {
+async function getPromedioPosadas(conceptoBuscado) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Concepto==Puntuacion&options=count&limit=1000&options=keyValues&attrs=Valor",
+      url: "http://localhost:1026/v2/entities?q=Concepto=="+conceptoBuscado+"&options=count&limit=1000&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",

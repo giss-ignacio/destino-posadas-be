@@ -13,31 +13,26 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
 });
 
 frontendRouter.get("/promedioPosadas", async function (req, res, next) {
-  let respuestaTotal = await getData.getPromedioPosadas();
-  let respuestaPersonal = await getData.getPromedioPosadas("");
-  let respuestaLimpieza = await getData.getPromedioPosadas();
-  let respuestaPrecioCalidad = await getData.getPromedioPosadas();
-  let respuestaUbicacion = await getData.getPromedioPosadas();
-  let respuestaWifi = await getData.getPromedioPosadas();
+  
+  let respuestaPersonal = await getData.getPromedioPosadas("Personal");
+  let respuestaLimpieza = await getData.getPromedioPosadas("Limpieza");
+  let respuestaPrecioCalidad = await getData.getPromedioPosadas("Precio/Calidad");
+  let respuestaUbicacion = await getData.getPromedioPosadas("Ubicacion");
+  let respuestaWifi = await getData.getPromedioPosadas("WiFi");
+  let respuestaTotal = await getData.getPromedioPosadas("Puntuacion");
 
-  // let promedioPuntuaciones = {
-  //   personal: ,
-  //   limpieza: valorLimpieza1,
-  //   precioCalidad: valorPrecioCalidad1,
-  //   ubicacion: valorUbicacion1,
-  //   wifi: valorWifi1,
-  //   total: (
-  //     (valorPers1 +
-  //       valorLimpieza1 +
-  //       valorPrecioCalidad1 +
-  //       valorUbicacion1 +
-  //       valorWifi1) /
-  //     5
-  //   ).toFixed(1),
-  // }
+  let promedioPuntuaciones = {
+    personal: parseFloat(respuestaPersonal.toFixed(2)),
+    limpieza: parseFloat(respuestaLimpieza.toFixed(2)),
+    precioCalidad: parseFloat(respuestaPrecioCalidad.toFixed(2)),
+    ubicacion: parseFloat(respuestaUbicacion.toFixed(2)),
+    wifi: parseFloat(respuestaWifi.toFixed(2)),
+    total: parseFloat(respuestaTotal.toFixed(2))
+  }
 
-  Promise.all([respuesta]).then((values) => {
-    res.json(values);
+  Promise.all([respuestaTotal,respuestaPersonal,
+    respuestaLimpieza,respuestaPrecioCalidad,respuestaUbicacion,respuestaWifi]).then((values) => {
+    res.json(promedioPuntuaciones);
   });
 });
 
