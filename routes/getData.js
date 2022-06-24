@@ -169,7 +169,7 @@ async function getDistribucionHoteles() {
 async function getPromedioNoche() {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+      url: "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -268,6 +268,115 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
   }
 }
 
+async function getEvolucionMensualPrecio() {
+  // let meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+  //   'Julio', 'Agosto', 'Octubre', 'Noviembre', 'Diciembre'];
+  try {
+   
+    let resNoviembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==Noviembre;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resDiciembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==Diciembre;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resEnero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resFebrero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let listaPreciosNov = resNoviembre.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosDic = resDiciembre.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosEne = resEnero.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+    let listaPreciosFeb = resFebrero.data
+    .filter((e) => {
+      return e.Valor;
+    })
+    .map((a) => {
+      let valor = a.Valor.replace("p ", "").replace(",", "");
+      return parseFloat(valor);
+    });
+
+
+    const maxNov = Math.max(...listaPreciosNov);
+    const maxDic = Math.max(...listaPreciosDic);
+    const maxEne = Math.max(...listaPreciosEne);
+    const maxFeb = Math.max(...listaPreciosFeb);
+
+    const minNov = Math.min(...listaPreciosNov);
+    const minDic = Math.min(...listaPreciosDic);
+    const minEne = Math.min(...listaPreciosEne);
+    const minFeb = Math.min(...listaPreciosFeb);
+
+
+    jsonMaxMin = {
+      maxNov : maxNov,
+      minNov : minNov,
+      maxDic : maxDic,
+      minDic : minDic,
+      maxEne : maxEne,
+      minEne : minEne,
+      maxFeb : maxFeb,
+      minFeb : minFeb,
+    }
+
+    console.log(jsonMaxMin)
+
+    return jsonMaxMin;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
 module.exports = {
   getData,
   getTop3,
@@ -277,4 +386,5 @@ module.exports = {
   getServicioPorMes,
   getTotalOpiniones,
   getPromedioPosadas,
+  getEvolucionMensualPrecio
 };
