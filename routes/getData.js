@@ -1,4 +1,19 @@
 var axios = require("axios");
+const meses = [
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
+];
+const enumAlojamientos = ["Hotel", "Residencial", "Apart Hotel", "Hosteria"];
 
 async function getData() {
   try {
@@ -23,7 +38,10 @@ async function getData() {
 async function getPromedioPosadas(conceptoBuscado) {
   try {
     let res = await axios({
-      url: "http://localhost:1026/v2/entities?q=Concepto=="+conceptoBuscado+"&options=count&limit=1000&options=keyValues&attrs=Valor",
+      url:
+        "http://localhost:1026/v2/entities?q=Concepto==" +
+        conceptoBuscado +
+        "&options=count&limit=1000&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -266,101 +284,307 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
 }
 
 async function getServiciosHistorico2022(concepto) {
- // j = concepto;
-  var tablaMes =[
-    {mes:"Enero"},{mes:"Febrero"},{mes:"Marzo"},{mes:"Abril"},{mes:"Mayo"},{mes:"Junio"},{mes:"Julio"},{mes:"Agosto"},{mes:"Septiembre"},{mes:"Octubre"},{mes:"Noviembre"},{mes:"Diciembre"}
-  ]
-  var tablaTipo =[
-    {tipo:"Hotel"},{tipo:"Apart Hotel"},{tipo:"Hostería"},{tipo:"Residencial"}
-  ]
-    
-    // ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
-    // ["Hotel","Apart Hotel","Hostería","Residencial"]
+  // j = concepto;
+  var tablaMes = [
+    { mes: "Enero" },
+    { mes: "Febrero" },
+    { mes: "Marzo" },
+    { mes: "Abril" },
+    { mes: "Mayo" },
+    { mes: "Junio" },
+    { mes: "Julio" },
+    { mes: "Agosto" },
+    { mes: "Septiembre" },
+    { mes: "Octubre" },
+    { mes: "Noviembre" },
+    { mes: "Diciembre" },
+  ];
+  var tablaTipo = [
+    { tipo: "Hotel" },
+    { tipo: "Apart Hotel" },
+    { tipo: "Hostería" },
+    { tipo: "Residencial" },
+  ];
+
+  // ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
+  // ["Hotel","Apart Hotel","Hostería","Residencial"]
 
   var arr = Array.from(Array(4), () => new Array(12));
   for (var i = 0; i < 4; i++) {
     for (var z = 0; z < 12; z++) {
-      var promedioAxu = await getPromedioCxTipo(2022,tablaMes[z].mes,concepto,tablaTipo[i].tipo)
+      var promedioAxu = await getPromedioCxTipo(
+        2022,
+        tablaMes[z].mes,
+        concepto,
+        tablaTipo[i].tipo
+      );
       //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
-      console.log("Envio")
-      arr[i][z] = {x:"2022,"+(z+1)+",1",y:""+promedioAxu+""};
-    }   
- }
- //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
+      console.log("Envio");
+      arr[i][z] = { x: "2022," + (z + 1) + ",1", y: "" + promedioAxu + "" };
+    }
+  }
+  //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
   console.log("Respuesta al endpoint");
   console.log(arr);
   console.log("Respuesta promedioAxu");
   console.log(promedioAxu);
   return arr;
-
 }
-async function getPromedioCxTipo(a,m,c,t) {
+async function getPromedioCxTipo(a, m, c, t) {
   try {
-      let res = await axios({
-        url: "http://localhost:3009/api/fedata/getServicioPorMes?a="+a+"&m="+m+"&c="+c+"&t="+t+"",
-        method: "get",
-        headers: {
-          Accept: "application/json",
-        },
-      });
-  
-      let promedioPuntuacion = res.data
-      console.log("Promedio Puntuacion :"+promedioPuntuacion);
-  
-      if (res.status == 200) {
-        // test for status you want, etc
-        console.log(res.status);
-      }
-      // Don't forget to return something
-      return promedioPuntuacion;//.parseInt;
-    } catch (err) {
-      console.error(err);
+    let res = await axios({
+      url:
+        "http://localhost:3009/api/fedata/getServicioPorMes?a=" +
+        a +
+        "&m=" +
+        m +
+        "&c=" +
+        c +
+        "&t=" +
+        t +
+        "",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let promedioPuntuacion = res.data;
+    console.log("Promedio Puntuacion :" + promedioPuntuacion);
+
+    if (res.status == 200) {
+      // test for status you want, etc
+      console.log(res.status);
     }
+    // Don't forget to return something
+    return promedioPuntuacion; //.parseInt;
+  } catch (err) {
+    console.error(err);
   }
+}
 
 async function ArmarTabla() {
   try {
-    var ano = 2022
-    var mes = "Febrero"
-    var concepto = "WiFi"
-    var tipo ="Hotel"
-   
-    
-   const d_t = new Date();
-    
-   let year = d_t.getFullYear();
-   let month = d_t.getMonth();
-   let day = d_t.getDate();
-   // let hour = d_t.getHours();
-   // let minute = d_t.getMinutes();
-   var tabla =[
-       ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"],
-       ["Hotel","Apart Hotel","Hostería","Residencial"]
-   ]
-   
-    let miPromedio = await getData.getPromedioCxTipo(ano,mes,concepto,tipo);
-   console.log("mi promedio :"+miPromedio);
-   
-   var arr = Array.from(Array(4), () => new Array(12));
+    var ano = 2022;
+    var mes = "Febrero";
+    var concepto = "WiFi";
+    var tipo = "Hotel";
+
+    const d_t = new Date();
+
+    let year = d_t.getFullYear();
+    let month = d_t.getMonth();
+    let day = d_t.getDate();
+    // let hour = d_t.getHours();
+    // let minute = d_t.getMinutes();
+    var tabla = [
+      [
+        "Enero",
+        "Febrero",
+        "Marzo",
+        "Abril",
+        "Mayo",
+        "Junio",
+        "Julio",
+        "Agosto",
+        "Septiembre",
+        "Octubre",
+        "Noviembre",
+        "Diciembre",
+      ],
+      ["Hotel", "Apart Hotel", "Hostería", "Residencial"],
+    ];
+
+    let miPromedio = await getData.getPromedioCxTipo(ano, mes, concepto, tipo);
+    console.log("mi promedio :" + miPromedio);
+
+    var arr = Array.from(Array(4), () => new Array(12));
     for (var i = 0; i < 4; i++) {
-         for (var z = 0; z < 12; z++) {
-           h=d_t.getFullYear()
-           j=d_t.getMonth()
-           arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
-         }   
+      for (var z = 0; z < 12; z++) {
+        h = d_t.getFullYear();
+        j = d_t.getMonth();
+        arr[i][z] = { x: "" + h + "," + (z + 1) + ",1", y: z };
       }
-   
-   console.log("arr");
-   console.log(arr);
-   console.log(year);
-   console.log(month);
-   console.log(day);
+    }
+
+    console.log("arr");
+    console.log(arr);
+    console.log(year);
+    console.log(month);
+    console.log(day);
     if (res.status == 200) {
       // test for status you want, etc
       console.log(res.status);
     }
     // Don't forget to return something
     return res.data;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getEvolucionMensualPrecio() {
+  try {
+    let resNoviembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==" +
+        meses[10] +
+        ";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resDiciembre = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==" +
+        meses[11] +
+        ";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resEnero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==" +
+        meses[0] +
+        ";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let resFebrero = await axios({
+      url:
+        "http://localhost:1026/v2/entities?q=Mes==" +
+        meses[01] +
+        ";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let listaPreciosNov = resNoviembre.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        let valor = a.Valor.replace("p ", "").replace(",", "");
+        return parseFloat(valor);
+      });
+
+    let listaPreciosDic = resDiciembre.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        let valor = a.Valor.replace("p ", "").replace(",", "");
+        return parseFloat(valor);
+      });
+
+    let listaPreciosEne = resEnero.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        let valor = a.Valor.replace("p ", "").replace(",", "");
+        return parseFloat(valor);
+      });
+
+    let listaPreciosFeb = resFebrero.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        let valor = a.Valor.replace("p ", "").replace(",", "");
+        return parseFloat(valor);
+      });
+
+    const maxNov = Math.max(...listaPreciosNov);
+    const maxDic = Math.max(...listaPreciosDic);
+    const maxEne = Math.max(...listaPreciosEne);
+    const maxFeb = Math.max(...listaPreciosFeb);
+
+    const minNov = Math.min(...listaPreciosNov);
+    const minDic = Math.min(...listaPreciosDic);
+    const minEne = Math.min(...listaPreciosEne);
+    const minFeb = Math.min(...listaPreciosFeb);
+
+    jsonMaxMin = {
+      maxNov: maxNov,
+      minNov: minNov,
+      maxDic: maxDic,
+      minDic: minDic,
+      maxEne: maxEne,
+      minEne: minEne,
+      maxFeb: maxFeb,
+      minFeb: minFeb,
+    };
+    console.log(jsonMaxMin);
+    return jsonMaxMin;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function getEvolucionPuntajes(mes, tipoAlojamiento) {
+  let evoHotelesXMes = [];
+  let evoResidencialesXMes = [];
+  let evoApartsXMes = [];
+  let evoHosteriasXMes = [];
+  try {
+    for (const alojamiento of enumAlojamientos) {
+      for (const mes of enumMeses) {
+        let res = await axios({
+          url:
+            "http://localhost:1026/v2/entities?q=Mes==" +
+            mes +
+            ";Tipo==" +
+            alojamiento +
+            ";Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+          method: "get",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        let listaPuntuacionesMes = res.data
+          .filter((e) => {
+            return e.Valor;
+          })
+          .map((a) => {
+            let valor = a.Valor.replace("p ", "").replace(",", "");
+            return parseFloat(valor);
+          });
+
+        const promTotal =
+          listaPuntuacionesMes.reduce((a, b) => a + b, 0) /
+          listaPuntuacionesMes.length;
+
+        console.log(promTotal.toFixed(2));
+
+        if (alojamiento === enumAlojamientos[0]) {
+          evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[1]) {
+          evoResidencialesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[2]) {
+          evoApartsXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else {
+          evoHosteriasXMes.push(parseFloat(promTotal.toFixed(2)));
+        }
+      }
+    }
+
+    return [
+      evoHotelesXMes,
+      evoResidencialesXMes,
+      evoApartsXMes,
+      evoHosteriasXMes,
+    ];
   } catch (err) {
     console.error(err);
   }
@@ -378,4 +602,6 @@ module.exports = {
   getServiciosHistorico2022,
   getPromedioCxTipo,
   ArmarTabla,
+  getEvolucionPuntajes,
+  getEvolucionMensualPrecio,
 };

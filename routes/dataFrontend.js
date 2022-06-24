@@ -13,10 +13,11 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
 });
 
 frontendRouter.get("/promedioPosadas", async function (req, res, next) {
-  
   let respuestaPersonal = await getData.getPromedioPosadas("Personal");
   let respuestaLimpieza = await getData.getPromedioPosadas("Limpieza");
-  let respuestaPrecioCalidad = await getData.getPromedioPosadas("Precio/Calidad");
+  let respuestaPrecioCalidad = await getData.getPromedioPosadas(
+    "Precio/Calidad"
+  );
   let respuestaUbicacion = await getData.getPromedioPosadas("Ubicacion");
   let respuestaWifi = await getData.getPromedioPosadas("WiFi");
   let respuestaTotal = await getData.getPromedioPosadas("Puntuacion");
@@ -27,11 +28,17 @@ frontendRouter.get("/promedioPosadas", async function (req, res, next) {
     precioCalidad: parseFloat(respuestaPrecioCalidad.toFixed(2)),
     ubicacion: parseFloat(respuestaUbicacion.toFixed(2)),
     wifi: parseFloat(respuestaWifi.toFixed(2)),
-    total: parseFloat(respuestaTotal.toFixed(2))
-  }
+    total: parseFloat(respuestaTotal.toFixed(2)),
+  };
 
-  Promise.all([respuestaTotal,respuestaPersonal,
-    respuestaLimpieza,respuestaPrecioCalidad,respuestaUbicacion,respuestaWifi]).then((values) => {
+  Promise.all([
+    respuestaTotal,
+    respuestaPersonal,
+    respuestaLimpieza,
+    respuestaPrecioCalidad,
+    respuestaUbicacion,
+    respuestaWifi,
+  ]).then((values) => {
     res.json(promedioPuntuaciones);
   });
 });
@@ -189,7 +196,7 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   var promedio = 0;
   var acumulador = 0;
   var respuesta = [];
-//  if(Servicios.length<1){
+  //  if(Servicios.length<1){
   for (var i = 0; i < Servicios.length; i++) {
     if (Servicios[i].Valor == undefined) {
       //  block of code to be executed if the condition is true
@@ -202,50 +209,72 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
     }
   }
   promedio = acumulador / Cantidad;
-//  }
- 
-  
+  //  }
+
   console.log("INICIO - Respondo");
   console.log("Cantidad :" + Cantidad);
   console.log("promedio :" + promedio);
   console.log("acumulador :" + acumulador);
   console.log(Servicios);
   Promise.all([promedio]).then((values) => {
-   //res.promedio;
-  //  let promedioPuntuacion = res.data
-  //  .filter((e) => {
-  //    return e.Valor;
-  //  })
-  //  .map((a) => {
-  //    return parseInt(a.Valor);
-  //  });
-   res.json(values);
-  });
-});
-
-frontendRouter.get("/getServiciosHistorico2022/", async function (req, res, next) {
-  const miConcepto = req.query.c;
-  // var arr = Array.from(Array(4), () => new Array(12));
-  // for (var i = 0; i < 4; i++) {
-  //      for (var z = 0; z < 12; z++) {
-  //        h=d_t.getFullYear()
-  //        j=d_t.getMonth()
-  //        arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
-  //      }   
-  //   }
-
-  // console.log("llamada a ENDPOINT : getServiciosHistorico2022/")
-  // console.log("INICIO - Pregunto");
-  // console.log(miConcepto);
-  // console.log("FIN - Pregunto");
-  let Servicios = await getData.getServiciosHistorico2022(miConcepto);
-  //console.log("respuesta recibida de get2022 ");
-  //console.log(Servicios);
-  //res.json.Servicios;
-  Promise.all([Servicios]).then((values) => {
-    console.log("Envio a Front :")
-    console.log(Servicios)
+    //res.promedio;
+    //  let promedioPuntuacion = res.data
+    //  .filter((e) => {
+    //    return e.Valor;
+    //  })
+    //  .map((a) => {
+    //    return parseInt(a.Valor);
+    //  });
     res.json(values);
   });
 });
+
+frontendRouter.get(
+  "/getServiciosHistorico2022/",
+  async function (req, res, next) {
+    const miConcepto = req.query.c;
+    // var arr = Array.from(Array(4), () => new Array(12));
+    // for (var i = 0; i < 4; i++) {
+    //      for (var z = 0; z < 12; z++) {
+    //        h=d_t.getFullYear()
+    //        j=d_t.getMonth()
+    //        arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
+    //      }
+    //   }
+
+    // console.log("llamada a ENDPOINT : getServiciosHistorico2022/")
+    // console.log("INICIO - Pregunto");
+    // console.log(miConcepto);
+    // console.log("FIN - Pregunto");
+    let Servicios = await getData.getServiciosHistorico2022(miConcepto);
+    //console.log("respuesta recibida de get2022 ");
+    //console.log(Servicios);
+    //res.json.Servicios;
+    Promise.all([Servicios]).then((values) => {
+      console.log("Envio a Front :");
+      console.log(Servicios);
+      res.json(values);
+    });
+  }
+);
+
+frontendRouter.get("/evolucionPrecios", async function (req, res, next) {
+  let evolucion = await getData.getEvolucionMensualPrecio();
+
+  Promise.all([evolucion]).then((values) => {
+    res.json(values);
+  });
+});
+
+frontendRouter.get(
+  "/evolucionMensualPuntajes",
+  async function (req, res, next) {
+    let evolucion = await getData.getEvolucionPuntajes();
+
+    Promise.all([evolucion]).then((values) => {
+      res.json(values);
+    });
+  }
+);
+
 module.exports = frontendRouter;
