@@ -221,5 +221,12 @@ frontendRouter.get("/evolucionPrecios", async function (req, res, next) {
   });
 });
 
+frontendRouter.get("/evolucionMensualPuntajes", async function (req, res, next) {
+  let evolucion = await getData.getEvolucionPuntajes();
+
+  Promise.all([evolucion]).then((values) => {
+    res.json(values);
+  });
+});
 
 module.exports = frontendRouter;

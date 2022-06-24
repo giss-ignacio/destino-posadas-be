@@ -1,4 +1,7 @@
 var axios = require("axios");
+const enumMeses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+const enumAlojamientos = ['Hotel', 'Residencial', 'Apart Hotel', 'Hosteria']
 
 async function getData() {
   try {
@@ -269,13 +272,12 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
 }
 
 async function getEvolucionMensualPrecio() {
-  // let meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-  //   'Julio', 'Agosto', 'Octubre', 'Noviembre', 'Diciembre'];
+
   try {
    
     let resNoviembre = await axios({
       url:
-        "http://localhost:1026/v2/entities?q=Mes==Noviembre;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[10]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -284,7 +286,7 @@ async function getEvolucionMensualPrecio() {
 
     let resDiciembre = await axios({
       url:
-        "http://localhost:1026/v2/entities?q=Mes==Diciembre;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[11]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -293,7 +295,7 @@ async function getEvolucionMensualPrecio() {
 
     let resEnero = await axios({
       url:
-        "http://localhost:1026/v2/entities?q=Mes==Enero;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[0]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -302,7 +304,7 @@ async function getEvolucionMensualPrecio() {
 
     let resFebrero = await axios({
       url:
-        "http://localhost:1026/v2/entities?q=Mes==Febrero;Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
+        "http://localhost:1026/v2/entities?q=Mes=="+meses[01]+";Concepto==Tarifa Pesos&options=count&options=keyValues&attrs=Valor",
       method: "get",
       headers: {
         Accept: "application/json",
@@ -368,9 +370,65 @@ async function getEvolucionMensualPrecio() {
       minFeb : minFeb,
     }
 
-    console.log(jsonMaxMin)
-
     return jsonMaxMin;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
+
+async function getEvolucionPuntajes(mes, tipoAlojamiento) {
+
+  let evoHotelesXMes = [];
+  let evoResidencialesXMes =[];
+  let evoApartsXMes = [];
+  let evoHosteriasXMes = [];
+  try {
+
+    
+    for (const alojamiento of enumAlojamientos) {
+
+      for (const mes of enumMeses) {
+        let res = await axios({
+          url: "http://localhost:1026/v2/entities?q=Mes==" + mes +";Tipo=="+alojamiento+
+          ";Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+          method: "get",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        let listaPuntuacionesMes = res.data
+          .filter((e) => {
+            return e.Valor;
+          })
+          .map((a) => {
+            let valor = a.Valor.replace("p ", "").replace(",", "");
+            return parseFloat(valor);
+          });
+
+        const promTotal =
+        listaPuntuacionesMes.reduce((a, b) => a + b, 0) / listaPuntuacionesMes.length;
+
+        console.log(promTotal.toFixed(2));
+
+        if (alojamiento === enumAlojamientos[0]) {
+          evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else if(alojamiento === enumAlojamientos[1]){
+          evoResidencialesXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else if(alojamiento === enumAlojamientos[2]){
+          evoApartsXMes.push(parseFloat(promTotal.toFixed(2)))
+
+        } else {
+          evoHosteriasXMes.push(parseFloat(promTotal.toFixed(2)))
+        }
+      }
+    }
+
+
+    return [evoHotelesXMes, evoResidencialesXMes, evoApartsXMes, evoHosteriasXMes];
   } catch (err) {
     console.error(err);
   }
@@ -386,5 +444,6 @@ module.exports = {
   getServicioPorMes,
   getTotalOpiniones,
   getPromedioPosadas,
-  getEvolucionMensualPrecio
+  getEvolucionMensualPrecio,
+  getEvolucionPuntajes
 };
