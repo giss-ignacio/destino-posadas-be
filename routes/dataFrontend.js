@@ -12,6 +12,35 @@ frontendRouter.get("/hoteles", async function (req, res, next) {
   });
 });
 
+frontendRouter.get("/promedioPosadas", async function (req, res, next) {
+  let respuestaTotal = await getData.getPromedioPosadas();
+  let respuestaPersonal = await getData.getPromedioPosadas("");
+  let respuestaLimpieza = await getData.getPromedioPosadas();
+  let respuestaPrecioCalidad = await getData.getPromedioPosadas();
+  let respuestaUbicacion = await getData.getPromedioPosadas();
+  let respuestaWifi = await getData.getPromedioPosadas();
+
+  // let promedioPuntuaciones = {
+  //   personal: ,
+  //   limpieza: valorLimpieza1,
+  //   precioCalidad: valorPrecioCalidad1,
+  //   ubicacion: valorUbicacion1,
+  //   wifi: valorWifi1,
+  //   total: (
+  //     (valorPers1 +
+  //       valorLimpieza1 +
+  //       valorPrecioCalidad1 +
+  //       valorUbicacion1 +
+  //       valorWifi1) /
+  //     5
+  //   ).toFixed(1),
+  // }
+
+  Promise.all([respuesta]).then((values) => {
+    res.json(values);
+  });
+});
+
 frontendRouter.get("/top3hoteles", async function (req, res, next) {
   let respuesta = await getData.getTop3();
 

@@ -20,6 +20,38 @@ async function getData() {
   }
 }
 
+async function getPromedioPosadas() {
+  try {
+    let res = await axios({
+      url: "http://localhost:1026/v2/entities?q=Concepto==Puntuacion&options=count&limit=1000&options=keyValues&attrs=Valor",
+      method: "get",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    let promedioPuntuacion = res.data
+      .filter((e) => {
+        return e.Valor;
+      })
+      .map((a) => {
+        return parseInt(a.Valor);
+      });
+
+    const total =
+      promedioPuntuacion.reduce((a, b) => a + b, 0) / promedioPuntuacion.length;
+
+    if (res.status == 200) {
+      // test for status you want, etc
+      console.log(res.status);
+    }
+    // Don't forget to return something
+    return total;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 async function getTop3() {
   try {
     let res = await axios({
@@ -195,23 +227,32 @@ async function getTotalOpiniones() {
   }
 }
 
-  async function getServicioPorMes(ano,mes,concepto,tipo) {
+async function getServicioPorMes(ano, mes, concepto, tipo) {
   //Busca el Valor de un conepto filtrando por concepro año mes y tipo
   try {
     let resHoteles = await axios({
-     url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano=="+ano+";Mes==" + mes+";Tipo==" + tipo+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Valor",
-     //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano=="+ano+";Mes==" + mes+";Tipo==" + tipo+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
-     //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano==2022;Mes==" + mes+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
-     //url: 'http://localhost:1026/v2/entities?q=Concepto==WiFi;Ano==2022;Mes==Febrero&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano', 
-     method: "get",
-     //params: { locale: "en-gb", hotel_id: id },
+      url:
+        "http://localhost:1026/v2/entities?q=Concepto==" +
+        concepto +
+        ";Ano==" +
+        ano +
+        ";Mes==" +
+        mes +
+        ";Tipo==" +
+        tipo +
+        "&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Valor",
+      //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano=="+ano+";Mes==" + mes+";Tipo==" + tipo+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
+      //url: "http://localhost:1026/v2/entities?q=Concepto=="+ concepto+";Ano==2022;Mes==" + mes+"&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano",
+      //url: 'http://localhost:1026/v2/entities?q=Concepto==WiFi;Ano==2022;Mes==Febrero&orderBy=!Nombre&limit=1000&options=keyValues&attrs=Mes,Nombre,Valor,Concepto,Ano',
+      method: "get",
+      //params: { locale: "en-gb", hotel_id: id },
       headers: {
         Accept: "application/json",
       },
     });
 
-   // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
-   //console.log(res.data)
+    // let Hoteles = parseInt(resHoteles.headers["fiware-total-count"]);
+    //console.log(res.data)
 
     if (resHoteles.status == 200) {
       // test for status you want, etc
@@ -232,4 +273,5 @@ module.exports = {
   getPromedioNoche,
   getServicioPorMes,
   getTotalOpiniones,
+  getPromedioPosadas,
 };
