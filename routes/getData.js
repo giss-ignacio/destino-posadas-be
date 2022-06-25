@@ -283,47 +283,62 @@ async function getServicioPorMes(ano, mes, concepto, tipo) {
   }
 }
 
-async function getServiciosHistorico2022(concepto) {
-  // j = concepto;
-  var tablaMes = [
-    { mes: "Enero" },
-    { mes: "Febrero" },
-    { mes: "Marzo" },
-    { mes: "Abril" },
-    { mes: "Mayo" },
-    { mes: "Junio" },
-    { mes: "Julio" },
-    { mes: "Agosto" },
-    { mes: "Septiembre" },
-    { mes: "Octubre" },
-    { mes: "Noviembre" },
-    { mes: "Diciembre" },
-  ];
-  var tablaTipo = [
-    { tipo: "Hotel" },
-    { tipo: "Apart Hotel" },
-    { tipo: "Hostería" },
-    { tipo: "Residencial" },
-  ];
+async function getServiciosHistorico() {
+
+  let evoHotelesXMes = [];
+  let evoResidencialesXMes = [];
+  let evoApartsXMes = [];
+  let evoHosteriasXMes = [];
+  try {
+    for (const alojamiento of enumAlojamientos) {
+      for (const mes of enumMeses) {
+        let res = await axios({
+          url:
+            "http://localhost:1026/v2/entities?q=Mes==" + mes +
+            ";Tipo==" + alojamiento +
+            ";Concepto==WiFi&options=keyValues&attrs=Valor&limit=1000",
+          method: "get",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        let listaPuntuacionesMes = res.data
+          .filter((e) => {
+            return e.Valor;
+          }).map((a) => {
+            return parseFloat(a.Valor);
+          });
 
 
-  var arr = Array.from(Array(4), () => new Array(12));
-  for (var i = 0; i < 4; i++) {
-    for (var z = 0; z < 12; z++) {
-      var promedioAxu = await getPromedioCxTipo(
-        2022,
-        tablaMes[z].mes,
-        concepto,
-        tablaTipo[i].tipo
-      );
-      //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
-      arr[i][z] = { x: "2022," + (z + 1) + ",1", y: "" + promedioAxu + "" };
+        const promTotal =
+          listaPuntuacionesMes.reduce((a, b) => a + b, 0) /
+          listaPuntuacionesMes.length;
+
+
+        if (alojamiento === enumAlojamientos[0]) {
+          evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[1]) {
+          evoResidencialesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[2]) {
+          evoApartsXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else {
+          evoHosteriasXMes.push(parseFloat(promTotal.toFixed(2)));
+        }
+      }
     }
-  }
-  //var promedioAxu = await getPromedioCxTipo(2022,"Enero",concepto,"Hotel")
 
-  return arr;
+    return [
+      evoHotelesXMes,
+      evoResidencialesXMes,
+      evoApartsXMes,
+      evoHosteriasXMes,
+    ];
+  } catch (err) {
+    console.error(err);
+  }
 }
+
+
 async function getPromedioCxTipo(a, m, c, t) {
   try {
     let res = await axios({
@@ -370,23 +385,7 @@ async function ArmarTabla() {
     let day = d_t.getDate();
     // let hour = d_t.getHours();
     // let minute = d_t.getMinutes();
-    var tabla = [
-      [
-        "Enero",
-        "Febrero",
-        "Marzo",
-        "Abril",
-        "Mayo",
-        "Junio",
-        "Julio",
-        "Agosto",
-        "Septiembre",
-        "Octubre",
-        "Noviembre",
-        "Diciembre",
-      ],
-      ["Hotel", "Apart Hotel", "Hostería", "Residencial"],
-    ];
+    
 
     let miPromedio = await getData.getPromedioCxTipo(ano, mes, concepto, tipo);
 
@@ -547,7 +546,7 @@ module.exports = {
   getServicioPorMes,
   getTotalOpiniones,
   getPromedioPosadas,
-  getServiciosHistorico2022,
+  getServiciosHistorico,
   getPromedioCxTipo,
   ArmarTabla,
   getEvolucionPuntajes,

@@ -224,26 +224,11 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
 });
 
 frontendRouter.get(
-  "/getServiciosHistorico2022/",
+  "/serviciosHistorico",
   async function (req, res, next) {
-    const miConcepto = req.query.c;
-    // var arr = Array.from(Array(4), () => new Array(12));
-    // for (var i = 0; i < 4; i++) {
-    //      for (var z = 0; z < 12; z++) {
-    //        h=d_t.getFullYear()
-    //        j=d_t.getMonth()
-    //        arr[i][z] = {x:""+h+","+(z+1)+",1",y:z};
-    //      }
-    //   }
 
-    // console.log("llamada a ENDPOINT : getServiciosHistorico2022/")
-    // console.log("INICIO - Pregunto");
-    // console.log(miConcepto);
-    // console.log("FIN - Pregunto");
-    let Servicios = await getData.getServiciosHistorico2022(miConcepto);
-    //console.log("respuesta recibida de get2022 ");
-    //console.log(Servicios);
-    //res.json.Servicios;
+    let Servicios = await getData.getServiciosHistorico();
+
     Promise.all([Servicios]).then((values) => {
 
       res.json(values);
