@@ -494,11 +494,9 @@ async function getEvolucionPuntajes() {
       for (const mes of enumMeses) {
         let res = await axios({
           url:
-            "http://localhost:1026/v2/entities?q=Mes==" +
-            mes +
-            ";Tipo==" +
-            alojamiento +
-            ";Concepto==Tarifa Pesos&options=keyValues&attrs=Valor&limit=1000",
+            "http://localhost:1026/v2/entities?q=Mes=="+mes+
+            ";Tipo=="+alojamiento+
+            ";Concepto==Puntuacion&options=keyValues&attrs=Valor&limit=1000",
           method: "get",
           headers: {
             Accept: "application/json",
@@ -507,15 +505,15 @@ async function getEvolucionPuntajes() {
         let listaPuntuacionesMes = res.data
           .filter((e) => {
             return e.Valor;
-          })
-          .map((a) => {
-            let valor = a.Valor.replace("p ", "").replace(",", "");
-            return parseFloat(valor);
+          }).map((a) => {
+            return parseFloat(a.Valor);
           });
+
 
         const promTotal =
           listaPuntuacionesMes.reduce((a, b) => a + b, 0) /
           listaPuntuacionesMes.length;
+
 
         if (alojamiento === enumAlojamientos[0]) {
           evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)));
