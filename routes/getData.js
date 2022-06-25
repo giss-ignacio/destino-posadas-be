@@ -537,6 +537,61 @@ async function getEvolucionPuntajes() {
   }
 }
 
+async function getEvolucionMensualXConcepto(concepto) {
+  let evoHotelesXMes = [];
+  let evoResidencialesXMes = [];
+  let evoApartsXMes = [];
+  let evoHosteriasXMes = [];
+  try {
+    for (const alojamiento of enumAlojamientos) {
+      for (const mes of enumMeses) {
+        let res = await axios({
+          url:
+            "http://localhost:1026/v2/entities?q=Mes=="+mes+
+            ";Tipo=="+alojamiento+
+            ";Concepto=="+concepto+"&options=keyValues&attrs=Valor&limit=1000",
+          method: "get",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        let listaPuntuacionesMes = res.data
+          .filter((e) => {
+            return e.Valor;
+          }).map((a) => {
+            return parseFloat(a.Valor);
+          });
+
+
+        const promTotal =
+          listaPuntuacionesMes.reduce((a, b) => a + b, 0) /
+          listaPuntuacionesMes.length;
+
+
+        if (alojamiento === enumAlojamientos[0]) {
+          evoHotelesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[1]) {
+          evoResidencialesXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else if (alojamiento === enumAlojamientos[2]) {
+          evoApartsXMes.push(parseFloat(promTotal.toFixed(2)));
+        } else {
+          evoHosteriasXMes.push(parseFloat(promTotal.toFixed(2)));
+        }
+      }
+    }
+
+    return [
+      evoHotelesXMes,
+      evoResidencialesXMes,
+      evoApartsXMes,
+      evoHosteriasXMes,
+    ];
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+
 module.exports = {
   getData,
   getTop3,
@@ -551,4 +606,5 @@ module.exports = {
   ArmarTabla,
   getEvolucionPuntajes,
   getEvolucionMensualPrecio,
+  getEvolucionMensualXConcepto,
 };

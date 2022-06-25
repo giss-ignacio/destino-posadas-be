@@ -255,4 +255,16 @@ frontendRouter.get(
   }
 );
 
+frontendRouter.get(
+  "/evolucionMensualPorConcepto",
+  async function (req, res, next) {
+    const conc = req.query.concepto
+    let evolucion = await getData.getEvolucionMensualXConcepto(conc);
+
+    Promise.all([evolucion]).then((values) => {
+      res.json(values);
+    });
+  }
+);
+
 module.exports = frontendRouter;
