@@ -37,5 +37,4 @@ networks:
         name: posadas-network
 
 volumes:
-    posadas_db_volume:
     mongo_db_volume:
