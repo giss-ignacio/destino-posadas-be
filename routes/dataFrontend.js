@@ -178,12 +178,6 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   const miConcepto = req.query.c;
   const miTipo = req.query.t;
 
-  console.log("INICIO - Pregunto");
-  console.log(miAno);
-  console.log(miMes);
-  console.log(miConcepto);
-  console.log(miTipo);
-  console.log("FIN - Pregunto");
   let Servicios = await getData.getServicioPorMes(
     miAno,
     miMes,
@@ -251,8 +245,7 @@ frontendRouter.get(
     //console.log(Servicios);
     //res.json.Servicios;
     Promise.all([Servicios]).then((values) => {
-      console.log("Envio a Front :");
-      console.log(Servicios);
+
       res.json(values);
     });
   }
