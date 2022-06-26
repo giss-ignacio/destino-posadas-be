@@ -289,8 +289,7 @@ frontendRouter.post(
   "/fecha",
   async function (req, res, next) {
 
-    let fechaOK = await postData.updateFecha(Date.now());
-
+    let fechaOK = await postData.updateFecha();
     Promise.all([fechaOK]).then((values) => {
       res.json(values);
     });
