@@ -3,6 +3,7 @@ var express = require("express");
 const frontendRouter = express.Router();
 require("dotenv").config();
 const getData = require("./getData.js");
+const authadmin = require("../middleware/authadmin");
 
 frontendRouter.get("/hoteles", async function (req, res, next) {
   let respuesta = await getData.getData();
@@ -171,6 +172,23 @@ frontendRouter.get("/totalOpiniones", async function (req, res, next) {
   });
 });
 
+frontendRouter.post("/login", async (req, res) => {
+    try {
+      const user = await data.findByCredentials(
+        req.body.email,
+        req.body.password
+      );
+      if (user.activo) {
+        const token = await data.generatedAuthToken(user);
+        res.send({ user, token });
+      } else {
+        res.status(403).send("Su cuenta esta inactiva");
+      }
+    } catch (error) {
+      res.status(401).send(error.message);
+    }
+  });
+  
 frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
   // Devuelve el promedio de todos los resultados obtenidos de Valor segun el criterio ingresado
   const miAno = req.query.a;
