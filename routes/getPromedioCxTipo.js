@@ -22,10 +22,10 @@ async function promedio(a,m,c,t) {
         promedioPuntuacion.reduce((a, b) => a + b, 0) / promedioPuntuacion.length;
   
       if (res.status == 200) {
-        // test for status you want, etc
+
         console.log(res.status);
       }
-      // Don't forget to return something
+
       return total;
     } catch (err) {
       console.error(err);

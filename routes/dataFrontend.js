@@ -202,41 +202,28 @@ frontendRouter.get("/getServicioPorMes/", async function (req, res, next) {
     miConcepto,
     miTipo
   );
-  //let Servicios = await getData.getServicioPorMes();
-  //var Cantidad = Servicios.length;
+
+  
   var Cantidad = 0;
   var promedio = 0;
   var acumulador = 0;
   var respuesta = [];
-  //  if(Servicios.length<1){
   for (var i = 0; i < Servicios.length; i++) {
     if (Servicios[i].Valor == undefined) {
-      //  block of code to be executed if the condition is true
+
       console.log("Se encontro el campo Valor sin Datos");
     } else {
-      //  block of code to be executed if the condition is false
+
       acumulador = acumulador + Servicios[i].Valor;
       Cantidad++;
-      console.log(Servicios[i].Valor);
     }
   }
   promedio = acumulador / Cantidad;
-  //  }
 
-  console.log("INICIO - Respondo");
-  console.log("Cantidad :" + Cantidad);
-  console.log("promedio :" + promedio);
-  console.log("acumulador :" + acumulador);
-  console.log(Servicios);
+  
   Promise.all([promedio]).then((values) => {
-    //res.promedio;
-    //  let promedioPuntuacion = res.data
-    //  .filter((e) => {
-    //    return e.Valor;
-    //  })
-    //  .map((a) => {
-    //    return parseInt(a.Valor);
-    //  });
+
+    
     res.json(values);
   });
 });

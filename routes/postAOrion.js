@@ -645,31 +645,6 @@ var mockData = {
   },
 };
 
-// var mockData2 = {
-//   id: "8051135",
-//   type: "Hotel",
-//   name: {
-//     type: "Text",
-//     value: "Hilton 2",
-//   },
-//   promedioHotel: {
-//     type: "Float",
-//     value: 9.3,
-//   },
-//   question: {
-//     type: "categorias",
-//     value: [
-//       {
-//         score: 9.6,
-//         question: "hotel_clean",
-//       },
-//       {
-//         score: 2.6,
-//         question: "hotel_comfort",
-//       },
-//     ],
-//   },
-// };
 
 var data = JSON.stringify({
   actionType: "append",
@@ -687,7 +662,7 @@ var config = {
 
 axios(config)
   .then(function (response) {
-    console.log(JSON.stringify(response.data));
+    
   })
   .catch(function (error) {
     console.log(error);
