@@ -1,31 +1,6 @@
 version: '3.2'
 services:
 
-    phpmyadmin:
-        image: phpmyadmin
-        restart: always
-        ports:
-            - 8080:80
-        environment:
-            - PMA_ARBITRARY=1
-        networks:
-            - posadas-net
-
-    mariadb:
-        image: mariadb:10.8.3
-        container_name: posadas-mariadb
-        restart: always
-        environment:
-            - MYSQL_ROOT_PASSWORD=posadas
-            - MYSQL_DATABASE=posadas
-        volumes:
-            - posadas_db_volume:/var/lib/mysql
-        ports:
-            - 5004:3306
-        networks:
-            - posadas-net
-        hostname: mariadb
-
     orion:
         image: fiware/orion
         hostname: orion
@@ -35,28 +10,6 @@ services:
         command: -dbhost mongodb -logLevel DEBUG -noCache
         networks:
             - posadas-net
-
-    cygnus:
-        image: fiware/cygnus-ngsi
-        hostname: cygnus
-        container_name: fiware-cygnus
-        ports:
-            - "5055:5055"
-            - "5080:5080"
-        environment:
-            - CYGNUS_MYSQL_SERVICE_PORT=5055
-            - CYGNUS_MYSQL_HOST=posadas-mariadb
-            - CYGNUS_MYSQL_PORT=3306
-            - CYGNUS_MYSQL_USER=root
-            - CYGNUS_MYSQL_PASS=posadas
-            - CYGNUS_MYSQL_BATCH_SIZE=1
-            - "CYGNUS_LOG_LEVEL=DEBUG"
-            - "CYGNUS_SERVICE_PORT=5055"
-            - "CYGNUS_API_PORT=5080"
-        networks:
-            - posadas-net
-        depends_on:
-            - mariadb
 
     mongodb:
         image: mongo:3.6
@@ -79,12 +32,9 @@ services:
         networks:
             - posadas-net
 
-
 networks:
     posadas-net:
         name: posadas-network
 
 volumes:
-    posadas_db_volume:
     mongo_db_volume:
-    grafana-storage:

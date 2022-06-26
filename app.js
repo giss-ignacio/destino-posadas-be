@@ -4,7 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 
 var indexRouter = require("./routes/index");
-var bookingRouter = require("./routes/booking");
+var loaderRouter = require("./routes/loader");
 var frontendRouter = require("./routes/dataFrontend");
 var mockServerRouter = require("./routes/mockDataServer");
 var dotenv = require("dotenv");
@@ -23,7 +23,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(cors({origin: "*"}))
 
 app.use("/", indexRouter);
-app.use("/api/booking", bookingRouter);
+app.use("/api/loader", loaderRouter);
 app.use("/api/fedata", frontendRouter);
 app.use("/api/mockdata", mockServerRouter);
 app.use("/api/users", usersRouter);
