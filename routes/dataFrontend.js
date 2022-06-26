@@ -4,6 +4,7 @@ const frontendRouter = express.Router();
 require("dotenv").config();
 const getData = require("./getData.js");
 const authadmin = require("../middleware/authadmin");
+const postData = require("./postData")
 
 frontendRouter.get("/hoteles", async function (req, res, next) {
   let respuesta = await getData.getData();
@@ -271,5 +272,31 @@ frontendRouter.get(
     });
   }
 );
+
+frontendRouter.get(
+  "/fecha",
+  async function (req, res, next) {
+    let fecha = await getData.getFecha();
+
+
+    Promise.all([fecha]).then((values) => {
+      res.json(values);
+    });
+  }
+);
+
+frontendRouter.post(
+  "/fecha",
+  async function (req, res, next) {
+
+    let fechaOK = await postData.updateFecha(Date.now());
+
+    Promise.all([fechaOK]).then((values) => {
+      res.json(values);
+    });
+  }
+);
+
+
 
 module.exports = frontendRouter;

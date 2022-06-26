@@ -1,4 +1,7 @@
 var axios = require("axios");
+const connection = require("../data/connection");
+const DATABASE = "destino_posadas";
+const COLLECTION_FECHA = "fecha";
 const enumMeses = [
   "Enero",
   "Febrero",
@@ -563,6 +566,18 @@ async function getEvolucionMensualXConcepto(concepto) {
   }
 }
 
+
+async function getFecha() {
+  const clientmongo = await connection.getConnection();
+  const fecha = await clientmongo
+    .db(DATABASE)
+    .collection(COLLECTION_FECHA)
+    .find()
+    .toArray();
+    
+  return fecha;
+}
+
 module.exports = {
   getData,
   getTop3,
@@ -578,4 +593,5 @@ module.exports = {
   getEvolucionPuntajes,
   getEvolucionMensualPrecio,
   getEvolucionMensualXConcepto,
+  getFecha
 };

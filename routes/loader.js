@@ -2,7 +2,7 @@ const axios = require("axios");
 var express = require("express");
 const router = express.Router();
 require("dotenv").config();
-const subirData = require("./postData.js");
+const postData = require("./postData.js");
 
 //GET HOTELES
 
@@ -110,7 +110,7 @@ router.post("/subirData", async function (req, res, next) {
   // let mockIds = [8051135, 5931564, 291801, 302053, 1522452, 1093286];
   // let respuesta = await consultaDePuntajes(mockIds);
 
-  await subirData();
+  await postData.subirData();
   res.json();
 
   // Mandarlo a la base da datos por Orion
